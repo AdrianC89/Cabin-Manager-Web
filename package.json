@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "description": "Página de Gestión de Reservas",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node ./app.js",
+    "start": "node ./app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "mysql2": "^3.10.3",
+    "nodemon": "^3.1.4",
+    "sequelize": "^6.37.3"
   }
 }

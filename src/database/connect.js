@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize('cabin-manager', 'root', 'root', {
+const sequelize = new Sequelize('cabin-manager', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
     port: 3306,

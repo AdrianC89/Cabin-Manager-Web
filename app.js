@@ -4,10 +4,11 @@ import bodyParser from 'body-parser';
 
 // Importar modelos para la sincronización
 import './src/models/clientesModel.js'
-
+import './src/models/cabanasModel.js'
 
 // Importación de controladores
 import clientesRouter from './src/controllers/clientesController.js';
+import cabanasRouter from './src/controllers/cabanasController.js';
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(clientesRouter);
+app.use(cabanasRouter);
 
 
 const PORT = process.env.PORT || 3000;

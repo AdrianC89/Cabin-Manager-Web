@@ -1,0 +1,129 @@
+body {
+    background-color: rgb(237, 220, 199);
+    background-image: url('../images/complejo-cabanas-cerro-redondo-tandil-pic-9.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center -300px;
+  }
+  
+  
+  header {
+    position: sticky;
+    width: 100%;
+    top: 0;
+  }
+  #logo {
+    width: 150px;
+    margin-right: 2rem;
+  }
+  .navbar {
+    background: rgb(201, 199, 97);
+    justify-content: space-between;
+  }
+  .navbar-nav-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .navbar-nav-right {
+    margin-left: auto;
+  }
+  
+  .dropdown-menu {
+    background: rgb(227, 225, 152);
+  }
+  
+  .dropdown-item:hover {
+    background: none;
+    color: rgb(105, 95, 24);
+    font-weight: bolder;
+  }
+  
+  .nav-link:hover {
+    color: rgb(105, 95, 24);
+    font-weight: bolder;
+  }
+  .btn {
+    border: 1px solid black;
+    color: black;
+  }
+  .btn:hover {
+    background: rgb(83, 76, 8);
+    border: 1px solid black;
+  }
+  
+  .img-fluid {
+    border-radius: 10px;
+    box-shadow: 5px 5px 1.5rem rgb(70, 68, 68);
+  
+  }
+  
+  .mt-5 {
+    background-color: rgba(250, 235, 215, 0.785);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: 5px 5px 1.5rem rgb(147, 142, 142);
+  }
+  
+  /* Inicio de Sesión */
+  .login-container, .register-container, .admin-container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+  }
+  .login-card, .register-card {
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+  }
+  .input-group-text {
+    background-color: #ffffff;
+    border-right: 0;
+  }
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #80bdff;
+  }
+  .input-group .form-control {
+    border-left: 0;
+  }
+  .toggle-password {
+    cursor: pointer;
+  }
+  
+  .btn-primary {
+    background-color: rgb(198, 197, 89);
+  }
+  
+  
+  /* Administracion General*/
+  
+  .admin-card {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+  }
+  .menu-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .list-group-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    font-size: 1.2rem;
+  }
+  .list-group-item i {
+    margin-right: 1rem;
+  }
+  

@@ -33,6 +33,9 @@ app.get('/', (req, res) => {
     res.json({ message: 'todo ok' });
 });
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/public/views'));
+
 app.use(clientesRouter);
 app.use(cabanasRouter);
 app.use(reservasRouter);

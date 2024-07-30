@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node ./app.js",
+    "dev": "nodemon ./app.js",
     "start": "node ./app.js"
   },
   "author": "",

@@ -1,12 +1,13 @@
-import { Router } from "express";
-import Cabana from "../models/cabanasModel.js";
+import { Router } from 'express';
+import Cabana from '../models/cabanasModel.js';
 
 const cabanasRouter = Router();
 
 cabanasRouter.get('/cabanas', async (req, res) => {
     try {
         const cabanas = await Cabana.findAll();
-        res.json(cabanas);
+        const plainCabanas = cabanas.map(cabana => cabana.toJSON());
+        res.render('cabanas', { cabanas: plainCabanas }); // Renderizar la vista 'cabanas'
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -17,7 +18,7 @@ cabanasRouter.get('/cabanas/:numero', async (req, res) => {
         const { numero } = req.params;
         const cabana = await Cabana.findByPk(numero);
         if (cabana) {
-            res.json(cabana);
+            res.render('cabana', { cabana: cabana.toJSON() }); // Renderizar la vista 'cabana'
         } else {
             res.status(404).json({ error: 'Cabaña no encontrada' });
         }

@@ -30,6 +30,8 @@ reservasRouter.get('/reservas/:numero_reserva', async (req, res) => {
                 fecha_fin: format(new Date(reserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
             };
             res.render('reserva', { reserva: formattedReserva }); // Renderizar la vista 'reserva'
+                        // Debugging information
+                        console.log('Rendering view with data:', formattedReserva);
         } else {
             res.status(404).json({ error: 'Reserva no encontrada' });
         }
@@ -49,9 +51,10 @@ reservasRouter.post('/reservas', async (req, res) => {
         });
         const formattedReserva = {
             ...newReserva.toJSON(),
-            fecha_inicio: newReserva.fecha_inicio.toISOString().split('T')[0],
-            fecha_fin: newReserva.fecha_fin.toISOString().split('T')[0],
+            fecha_inicio: format(new Date(newReserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
+            fecha_fin: format(new Date(newReserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
         };
+        res.render('reserva', { reserva: formattedReserva });
         res.status(201).json(formattedReserva);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -69,9 +72,10 @@ reservasRouter.put('/reservas/:numero_reserva', async (req, res) => {
             const updatedReserva = await Reserva.findByPk(numero_reserva);
             const formattedReserva = {
                 ...updatedReserva.toJSON(),
-                fecha_inicio: updatedReserva.fecha_inicio.toISOString().split('T')[0],
-                fecha_fin: updatedReserva.fecha_fin.toISOString().split('T')[0],
+                fecha_inicio: format(new Date(updatedReserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
+                fecha_fin: format(new Date(updatedReserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
             };
+            res.render('reserva', { reserva: formattedReserva });
             res.status(202).json(formattedReserva);
         } else {
             res.status(404).json({ error: 'Reserva no encontrada' });

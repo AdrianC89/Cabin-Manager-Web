@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import Reserva from "../models/reservasModel.js";
 
 const reservasRouter = Router();
@@ -8,8 +10,8 @@ reservasRouter.get('/reservas', async (req, res) => {
         const reservas = await Reserva.findAll();
         const formattedReservas = reservas.map(reserva => ({
             ...reserva.toJSON(),
-            fecha_inicio: reserva.fecha_inicio.toISOString().split('T')[0],
-            fecha_fin: reserva.fecha_fin.toISOString().split('T')[0],
+            fecha_inicio: format(new Date(reserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
+            fecha_fin: format(new Date(reserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
         }));
         res.render('reservas', { reservas: formattedReservas }); // Renderizar la vista 'reservas'
     } catch (error) {
@@ -24,8 +26,8 @@ reservasRouter.get('/reservas/:numero_reserva', async (req, res) => {
         if (reserva) {
             const formattedReserva = {
                 ...reserva.toJSON(),
-                fecha_inicio: reserva.fecha_inicio.toISOString().split('T')[0],
-                fecha_fin: reserva.fecha_fin.toISOString().split('T')[0],
+                fecha_inicio: format(new Date(reserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
+                fecha_fin: format(new Date(reserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
             };
             res.render('reserva', { reserva: formattedReserva }); // Renderizar la vista 'reserva'
         } else {

@@ -18,14 +18,15 @@ cabanasRouter.get('/cabanas/:numero', async (req, res) => {
         const { numero } = req.params;
         const cabana = await Cabana.findByPk(numero);
         if (cabana) {
-            res.render('cabana', { cabana: cabana.toJSON() }); // Renderizar la vista 'cabana'
+            res.json(cabana);
         } else {
-            res.status(404).json({ error: 'Cabaña no encontrada' });
+            res.status(404).json({ error: 'Cabana no encontrada' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 cabanasRouter.post('/cabanas', async (req, res) => {
     try {

@@ -1,76 +1,54 @@
-<%- include("templates/header", 
-{tituloWeb: 'Página de inicio',
-}) %>
-    <header>
-          <nav class="navbar navbar-expand-lg ">
-        <div class="container-fluid">
-            <img src="images/LogoCabin.png" alt="logo" id="logo">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.ejs">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="documentacion.html">Documentación</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Soporte
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Ayuda</a></li>
-                            <li><a class="dropdown-item" href="#">FAQ</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Contacto</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="d-flex navbar-nav-center" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
-                </form>
-                <ul class="navbar-nav navbar-nav-right mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="inicio-sesion.html">Iniciar Sesión</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="registro.html">Registrarse</a>
-                    </li>
-                </ul>
+<%- include("templates/header", {tituloWeb: 'Página de inicio' , }) %>
+    <main>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1>Bienvenido a Cabin Manager</h1>
+                    <p class="lead">El sistema integral para la gestión de complejos de cabañas.</p>
+                    <p>Cabin Manager es tu solución definitiva para administrar tus cabañas de manera eficiente y
+                        efectiva. Nuestro sistema te permite gestionar reservas, controlar disponibilidad, llevar un
+                        registro de huéspedes y optimizar tus operaciones diarias.</p>
+                    <img src="images/42474.jpg" class="img-fluid mt-4" alt="Cabin Manager">
+                    <p class="mt-4">Con Cabin Manager, tienes todas las herramientas que necesitas para ofrecer una
+                        experiencia excepcional a tus huéspedes mientras mantienes el control total de tu complejo de
+                        cabañas. Simplifica tu trabajo y mejora tu negocio con nuestro software innovador y fácil de
+                        usar.</p>
+                    <p class="mt-4">Nuestro sistema está diseñado pensando en la facilidad de uso y en la eficiencia.
+                        Cabin Manager te ayuda a reducir el tiempo dedicado a tareas administrativas, permitiéndote
+                        enfocarte en lo que realmente importa: brindar un servicio de alta calidad a tus clientes. Ya
+                        sea que manejes un pequeño complejo de cabañas o una gran cadena de alojamientos, nuestro
+                        software se adapta a tus necesidades.</p>
+                    <p class="mt-4">Entre las características destacadas de Cabin Manager se encuentran:</p>
+                    <ul class="list-unstyled">
+                        <li>- <strong>Gestión de Reservas:</strong> Administra todas tus reservas desde una plataforma
+                            centralizada.</li>
+                        <li>- <strong>Control de Disponibilidad:</strong> Mantén un control en tiempo real de la
+                            disponibilidad de tus cabañas.</li>
+                        <li>- <strong>Registro de Huéspedes:</strong> Lleva un registro detallado de todos tus huéspedes
+                            y sus preferencias.</li>
+                        <li>- <strong>Facturación y Pagos:</strong> Gestiona facturas y pagos de manera sencilla y
+                            eficiente.</li>
+                        <li>- <strong>Informes y Análisis:</strong> Obtén informes detallados para analizar el
+                            rendimiento de tu negocio.</li>
+                        <li>- <strong>Soporte Multilingüe:</strong> Ofrece una experiencia personalizada a huéspedes de
+                            todo el mundo.</li>
+                    </ul>
+                    <p class="mt-4">Cabin Manager no solo facilita la administración de tus cabañas, sino que también te
+                        proporciona insights valiosos para tomar decisiones informadas y estratégicas. Con nuestra
+                        plataforma, podrás identificar oportunidades de mejora, optimizar tu ocupación y maximizar tus
+                        ingresos.</p>
+                    <p class="mt-4">Estamos comprometidos con tu éxito. Por eso, ofrecemos soporte técnico y asesoría
+                        personalizada para ayudarte a sacar el máximo provecho de Cabin Manager. Nuestro equipo de
+                        expertos está siempre disponible para resolver tus dudas y asistirte en todo lo que necesites.
+                    </p>
+                    <p class="mt-4">No esperes más. Únete a la comunidad de usuarios satisfechos de Cabin Manager y
+                        transforma la gestión de tu complejo de cabañas hoy mismo.</p>
+                    <a href="#" class="btn btn-primary btn-lg mt-3">Descubre Más</a>
+                </div>
             </div>
         </div>
-    </nav>
-    </header>
-    <main>
-    <div class="container mt-5">
-      <div class="row">
-          <div class="col-md-12 text-center">
-              <h1>Bienvenido a Cabin Manager</h1>
-              <p class="lead">El sistema integral para la gestión de complejos de cabañas.</p>
-              <p>Cabin Manager es tu solución definitiva para administrar tus cabañas de manera eficiente y efectiva. Nuestro sistema te permite gestionar reservas, controlar disponibilidad, llevar un registro de huéspedes y optimizar tus operaciones diarias.</p>
-              <img src="images/42474.jpg" class="img-fluid mt-4" alt="Cabin Manager">
-              <p class="mt-4">Con Cabin Manager, tienes todas las herramientas que necesitas para ofrecer una experiencia excepcional a tus huéspedes mientras mantienes el control total de tu complejo de cabañas. Simplifica tu trabajo y mejora tu negocio con nuestro software innovador y fácil de usar.</p>
-              <p class="mt-4">Nuestro sistema está diseñado pensando en la facilidad de uso y en la eficiencia. Cabin Manager te ayuda a reducir el tiempo dedicado a tareas administrativas, permitiéndote enfocarte en lo que realmente importa: brindar un servicio de alta calidad a tus clientes. Ya sea que manejes un pequeño complejo de cabañas o una gran cadena de alojamientos, nuestro software se adapta a tus necesidades.</p>
-              <p class="mt-4">Entre las características destacadas de Cabin Manager se encuentran:</p>
-              <ul class="list-unstyled">
-                  <li>- <strong>Gestión de Reservas:</strong> Administra todas tus reservas desde una plataforma centralizada.</li>
-                  <li>- <strong>Control de Disponibilidad:</strong> Mantén un control en tiempo real de la disponibilidad de tus cabañas.</li>
-                  <li>- <strong>Registro de Huéspedes:</strong> Lleva un registro detallado de todos tus huéspedes y sus preferencias.</li>
-                  <li>- <strong>Facturación y Pagos:</strong> Gestiona facturas y pagos de manera sencilla y eficiente.</li>
-                  <li>- <strong>Informes y Análisis:</strong> Obtén informes detallados para analizar el rendimiento de tu negocio.</li>
-                  <li>- <strong>Soporte Multilingüe:</strong> Ofrece una experiencia personalizada a huéspedes de todo el mundo.</li>
-              </ul>
-              <p class="mt-4">Cabin Manager no solo facilita la administración de tus cabañas, sino que también te proporciona insights valiosos para tomar decisiones informadas y estratégicas. Con nuestra plataforma, podrás identificar oportunidades de mejora, optimizar tu ocupación y maximizar tus ingresos.</p>
-              <p class="mt-4">Estamos comprometidos con tu éxito. Por eso, ofrecemos soporte técnico y asesoría personalizada para ayudarte a sacar el máximo provecho de Cabin Manager. Nuestro equipo de expertos está siempre disponible para resolver tus dudas y asistirte en todo lo que necesites.</p>
-              <p class="mt-4">No esperes más. Únete a la comunidad de usuarios satisfechos de Cabin Manager y transforma la gestión de tu complejo de cabañas hoy mismo.</p>
-              <a href="#" class="btn btn-primary btn-lg mt-3">Descubre Más</a>
-          </div>
-      </div>
-  </div>
-</main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<%- include("templates/footer") %>
-
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <%- include("templates/footer") %>

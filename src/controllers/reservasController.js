@@ -11,7 +11,7 @@ reservasRouter.get('/reservas', async (req, res) => {
             fecha_inicio: reserva.fecha_inicio.toISOString().split('T')[0],
             fecha_fin: reserva.fecha_fin.toISOString().split('T')[0],
         }));
-        res.json(formattedReservas);
+        res.render('reservas', { reservas: formattedReservas }); // Renderizar la vista 'reservas'
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -27,7 +27,7 @@ reservasRouter.get('/reservas/:numero_reserva', async (req, res) => {
                 fecha_inicio: reserva.fecha_inicio.toISOString().split('T')[0],
                 fecha_fin: reserva.fecha_fin.toISOString().split('T')[0],
             };
-            res.json(formattedReserva);
+            res.render('reserva', { reserva: formattedReserva }); // Renderizar la vista 'reserva'
         } else {
             res.status(404).json({ error: 'Reserva no encontrada' });
         }

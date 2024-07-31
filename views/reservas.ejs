@@ -9,7 +9,7 @@
 } %>
 
 <%- include("templates/table", {
-    titulo: 'Lista de Reservas',
+    titulo: 'Listado de Reservas',
     encabezados: ['Número de Reserva', 'Fecha Inicio', 'Fecha Fin', 'Cliente DNI', 'Cabaña Número'],
     datos: reservas.map(reserva => ({
         numero_reserva: reserva.numero_reserva,

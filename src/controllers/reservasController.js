@@ -1,45 +1,26 @@
-import { Router } from "express";
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
-import Reserva from "../models/reservasModel.js";
+import { Router } from 'express';
+import Reserva from '../models/reservasModel.js';
 
 const reservasRouter = Router();
 
 reservasRouter.get('/reservas', async (req, res) => {
     try {
         const reservas = await Reserva.findAll();
-        const formattedReservas = reservas.map(reserva => ({
-            ...reserva.toJSON(),
-            fecha_inicio: format(new Date(reserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
-            fecha_fin: format(new Date(reserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
-        }));
-        res.render('reservas', { reservas: formattedReservas }); // Renderizar la vista 'reservas'
+        res.render('reservas', { reservas });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-reservasRouter.get('/reservas/:numero_reserva', async (req, res) => {
+reservasRouter.get('/reservas/:id', async (req, res) => {
     try {
-        const { numero_reserva } = req.params;
-        const reserva = await Reserva.findByPk(numero_reserva);
-        if (reserva) {
-            const formattedReserva = {
-                ...reserva.toJSON(),
-                fecha_inicio: format(new Date(reserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
-                fecha_fin: format(new Date(reserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
-            };
-            res.render('reserva', { reserva: formattedReserva }); // Renderizar la vista 'reserva'
-                        // Debugging information
-                        console.log('Rendering view with data:', formattedReserva);
-        } else {
-            res.status(404).json({ error: 'Reserva no encontrada' });
-        }
+        const { id } = req.params;
+        const reserva = await Reserva.findByPk(id);
+        res.json(reserva);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
-
 reservasRouter.post('/reservas', async (req, res) => {
     try {
         const { fecha_inicio, fecha_fin, cliente_dni, cabana_numero } = req.body;
@@ -49,13 +30,8 @@ reservasRouter.post('/reservas', async (req, res) => {
             cliente_dni,
             cabana_numero
         });
-        const formattedReserva = {
-            ...newReserva.toJSON(),
-            fecha_inicio: format(new Date(newReserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
-            fecha_fin: format(new Date(newReserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
-        };
-        res.render('reserva', { reserva: formattedReserva });
-        res.status(201).json(formattedReserva);
+        const plainReserva = newReserva.toJSON();
+        res.status(201).json(plainReserva);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -70,13 +46,8 @@ reservasRouter.put('/reservas/:numero_reserva', async (req, res) => {
                 where: { numero_reserva }
             });
             const updatedReserva = await Reserva.findByPk(numero_reserva);
-            const formattedReserva = {
-                ...updatedReserva.toJSON(),
-                fecha_inicio: format(new Date(updatedReserva.fecha_inicio), 'dd/MM/yyyy', { locale: es }),
-                fecha_fin: format(new Date(updatedReserva.fecha_fin), 'dd/MM/yyyy', { locale: es }),
-            };
-            res.render('reserva', { reserva: formattedReserva });
-            res.status(202).json(formattedReserva);
+            const plainReserva = updatedReserva.toJSON();
+            res.status(202).json(plainReserva);
         } else {
             res.status(404).json({ error: 'Reserva no encontrada' });
         }
@@ -88,18 +59,15 @@ reservasRouter.put('/reservas/:numero_reserva', async (req, res) => {
 reservasRouter.delete('/reservas/:numero_reserva', async (req, res) => {
     try {
         const { numero_reserva } = req.params;
-        console.log(`Attempting to delete reserva with numero_reserva: ${numero_reserva}`);
         const result = await Reserva.destroy({
             where: { numero_reserva }
         });
-        console.log(`Delete result: ${result}`);
         if (result) {
             res.status(204).end();
         } else {
             res.status(404).json({ error: "Reserva no encontrada" });
         }
     } catch (error) {
-        console.error(`Error deleting reserva: ${error.message}`);
         res.status(500).json({ error: error.message });
     }
 });

@@ -10,11 +10,11 @@ const Reserva = sequelize.define('Reserva', {
     autoIncrement: true,
   },
   fecha_inicio: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY, 
     allowNull: false,
   },
   fecha_fin: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY, 
     allowNull: false,
   },
   cliente_dni: {

@@ -1,14 +1,24 @@
-<%- include("templates/header", 
-{tituloWeb: 'Lista de Reservas',
-}) %>
+<%- include("templates/header", { tituloWeb: 'Lista de Reservas' }) %>
+
+<% function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = ('0' + date.getUTCDate()).slice(-2);
+    const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
+} %>
+
 <%- include("templates/table", {
     titulo: 'Lista de Reservas',
     encabezados: ['Número de Reserva', 'Fecha Inicio', 'Fecha Fin', 'Cliente DNI', 'Cabaña Número'],
-    datos: reservas
+    datos: reservas.map(reserva => ({
+        numero_reserva: reserva.numero_reserva,
+        fecha_inicio: formatDate(reserva.fecha_inicio),
+        fecha_fin: formatDate(reserva.fecha_fin),
+        cliente_dni: reserva.cliente_dni,
+        cabana_numero: reserva.cabana_numero
+    }))
 }) %>
 
-    <!-- Incluir JS de Bootstrap y jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <%- include("templates/footer") %>

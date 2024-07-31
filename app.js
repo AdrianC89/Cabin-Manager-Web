@@ -3,6 +3,7 @@ import sequelize from './src/database/connect.js';
 import bodyParser from 'body-parser';
 import path from 'path'; // Asegúrate de importar el módulo path
 
+
 // Importar modelos para la sincronización
 import './src/models/clientesModel.js';
 import './src/models/cabanasModel.js';

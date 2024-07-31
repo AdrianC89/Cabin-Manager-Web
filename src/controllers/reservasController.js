@@ -37,8 +37,8 @@ reservasRouter.get('/', async (req, res) => {
 
 reservasRouter.get('/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const reserva = await Reserva.findByPk(id);
+        const { numero_reserva } = req.params;
+        const reserva = await Reserva.findByPk(numero_reserva);
         res.json(reserva);
     } catch (error) {
         res.status(500).json({ error: error.message });

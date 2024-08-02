@@ -3,7 +3,7 @@ import Cliente from "../models/clientesModel.js";
 
 const clientesRouter = Router();
 
-clientesRouter.get('/clientes', async (req, res) => {
+clientesRouter.get('/', async (req, res) => {
     try {
         const clientes = await Cliente.findAll();
         const plainClientes = clientes.map(cliente => cliente.toJSON());
@@ -13,7 +13,7 @@ clientesRouter.get('/clientes', async (req, res) => {
     }
 });
 
-clientesRouter.get('/clientes/:id', async (req, res) => {
+clientesRouter.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const cliente = await Cliente.findByPk(id);
@@ -23,7 +23,7 @@ clientesRouter.get('/clientes/:id', async (req, res) => {
     }
 });
 
-clientesRouter.post('/clientes', async (req, res) => {
+clientesRouter.post('/', async (req, res) => {
     try {
         const { dni, nombre, direccion, telefono, email } = req.body;
         const newCliente = await Cliente.create({
@@ -39,7 +39,7 @@ clientesRouter.post('/clientes', async (req, res) => {
     }
 });
 
-clientesRouter.put('/clientes/:id', async (req, res) => {
+clientesRouter.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const cliente = await Cliente.findByPk(id);
@@ -58,21 +58,18 @@ clientesRouter.put('/clientes/:id', async (req, res) => {
     }
 });
 
-clientesRouter.delete('/clientes/:id', async (req, res) => {
+clientesRouter.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(`Attempting to delete cliente with DNI: ${id}`);
         const result = await Cliente.destroy({
             where: { dni: id }
         });
-        console.log(`Delete result: ${result}`);
         if (result) {
             res.status(204).end();
         } else {
             res.status(404).json({ error: "Cliente not found" });
         }
     } catch (error) {
-        console.error(`Error deleting cliente: ${error.message}`);
         res.status(500).json({ error: error.message });
     }
 });

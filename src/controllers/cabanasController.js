@@ -3,7 +3,7 @@ import Cabana from '../models/cabanasModel.js';
 
 const cabanasRouter = Router();
 
-cabanasRouter.get('/cabanas', async (req, res) => {
+cabanasRouter.get('/', async (req, res) => {
     try {
         const cabanas = await Cabana.findAll();
         const plainCabanas = cabanas.map(cabana => cabana.toJSON());
@@ -13,7 +13,7 @@ cabanasRouter.get('/cabanas', async (req, res) => {
     }
 });
 
-cabanasRouter.get('/cabanas/:numero', async (req, res) => {
+cabanasRouter.get('/:numero', async (req, res) => {
     try {
         const { numero } = req.params;
         const cabana = await Cabana.findByPk(numero);
@@ -28,7 +28,7 @@ cabanasRouter.get('/cabanas/:numero', async (req, res) => {
 });
 
 
-cabanasRouter.post('/cabanas', async (req, res) => {
+cabanasRouter.post('/', async (req, res) => {
     try {
         const { numero, capacidad, descripcion, costo_diario } = req.body;
         const newCabana = await Cabana.create({
@@ -43,7 +43,7 @@ cabanasRouter.post('/cabanas', async (req, res) => {
     }
 });
 
-cabanasRouter.put('/cabanas/:numero', async (req, res) => {
+cabanasRouter.put('/:numero', async (req, res) => {
     try {
         const { numero } = req.params;
         const cabana = await Cabana.findByPk(numero);
@@ -60,7 +60,7 @@ cabanasRouter.put('/cabanas/:numero', async (req, res) => {
     }
 });
 
-cabanasRouter.delete('/cabanas/:numero', async (req, res) => {
+cabanasRouter.delete('/:numero', async (req, res) => {
     try {
         const { numero } = req.params;
         console.log(`Attempting to delete cabaña with numero: ${numero}`);

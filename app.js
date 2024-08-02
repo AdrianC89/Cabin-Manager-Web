@@ -1,24 +1,32 @@
 import express from 'express';
+import cookieParser from 'cookie-parser'; // Importar cookie-parser
 import sequelize from './src/database/connect.js';
 import bodyParser from 'body-parser';
-import path from 'path'; // Asegúrate de importar el módulo path
+import path from 'path'; 
 
 
 // Importar modelos para la sincronización
 import './src/models/clientesModel.js';
 import './src/models/cabanasModel.js';
 import './src/models/reservasModel.js';
+import './src/models/usuariosModel.js'; 
 
 // Importación de controladores
 import clientesRouter from './src/controllers/clientesController.js';
 import cabanasRouter from './src/controllers/cabanasController.js';
 import reservasRouter from './src/controllers/reservasController.js';
+import usuariosRouter from './src/controllers/usuariosController.js';
+
+// Importar el middleware de autenticación
+import authRequired from './src/middlewares/authenticateToken.js'; // Cambia esto si usas cookies
 
 const app = express();
 
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser()); // Usa cookie-parser para manejar cookies
+
 
 // Configuración para servir archivos estáticos
 app.use(express.static(path.join(path.resolve(), 'public')));
@@ -43,9 +51,12 @@ app.get('/', (req, res) => {
 })();
 
 // Usar controladores
-app.use(clientesRouter);
-app.use(cabanasRouter);
-app.use(reservasRouter);
+app.use(usuariosRouter);
+
+// Aplicar el middleware de autenticación a las rutas que deseas proteger
+app.use('/clientes', authRequired, clientesRouter);
+app.use('/cabanas', authRequired, cabanasRouter);
+app.use('/reservas', authRequired, reservasRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

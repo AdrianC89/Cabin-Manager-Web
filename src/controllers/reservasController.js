@@ -3,7 +3,7 @@ import Reserva from '../models/reservasModel.js';
 
 const reservasRouter = Router();
 
-reservasRouter.get('/reservas', async (req, res) => {
+reservasRouter.get('/', async (req, res) => {
     try {
         const reservas = await Reserva.findAll();
         res.render('reservas', { reservas });
@@ -12,7 +12,7 @@ reservasRouter.get('/reservas', async (req, res) => {
     }
 });
 
-reservasRouter.get('/reservas/:id', async (req, res) => {
+reservasRouter.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const reserva = await Reserva.findByPk(id);
@@ -21,7 +21,7 @@ reservasRouter.get('/reservas/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-reservasRouter.post('/reservas', async (req, res) => {
+reservasRouter.post('/', async (req, res) => {
     try {
         const { fecha_inicio, fecha_fin, cliente_dni, cabana_numero } = req.body;
         const newReserva = await Reserva.create({
@@ -37,7 +37,7 @@ reservasRouter.post('/reservas', async (req, res) => {
     }
 });
 
-reservasRouter.put('/reservas/:numero_reserva', async (req, res) => {
+reservasRouter.put('/:numero_reserva', async (req, res) => {
     try {
         const { numero_reserva } = req.params;
         const reserva = await Reserva.findByPk(numero_reserva);
@@ -56,7 +56,7 @@ reservasRouter.put('/reservas/:numero_reserva', async (req, res) => {
     }
 });
 
-reservasRouter.delete('/reservas/:numero_reserva', async (req, res) => {
+reservasRouter.delete('/:numero_reserva', async (req, res) => {
     try {
         const { numero_reserva } = req.params;
         const result = await Reserva.destroy({

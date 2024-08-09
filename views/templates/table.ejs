@@ -27,12 +27,12 @@
                     <% } %>
                     <td>
                         <!-- Botón de Editar -->
-                        <a href="/<%= entidad %>/<%= dato[idField] %>/edit" class="btn btn-primary btn-sm">Editar</a>
+                        <a href="/<%= entidad %>/<%= dato[idField] %>/edit" class="btn btn-primary btn-sm"><i class="fa-duotone fa-solid fa-pencil"></i></a>
                         <!-- Botón de Eliminar con confirmación -->
                         <button 
                             class="btn btn-danger btn-sm" 
                             onclick="confirmDelete('<%= dato[idField] %>')">
-                            Eliminar
+                            <i class="fa-duotone fa-solid fa-trash"></i>
                         </button>
                     </td>
                 </tr>

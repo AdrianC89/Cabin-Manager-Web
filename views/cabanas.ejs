@@ -1,11 +1,9 @@
-<%- include("templates/header", 
-{tituloWeb: 'Lista de Cabañas',
-}) %>
+<%- include("templates/header", { tituloWeb: 'Lista de Cabañas' }) %>
 <%- include("templates/table", {
     titulo: 'Lista de Cabañas',
     encabezados: ['Número', 'Capacidad', 'Descripción', 'Costo Diario'],
-    datos: cabanas
+    datos: cabanas,
+    entidad: 'cabanas',
+    idField: 'numero'
 }) %>
-
-
 <%- include("templates/footer") %>

@@ -14,7 +14,7 @@
                         <%= encabezado %>
                     </th>
                 <% }) %>
-                <th>Acciones</th> <!-- Agregamos la columna ACCIÓN en el encabezado -->
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -26,12 +26,25 @@
                         </td>
                     <% } %>
                     <td>
-                        <!-- Aquí puedes agregar los botones de acción que necesites -->
-                        <a href="/editar/<%= dato.id %>" class="btn btn-primary btn-sm">Editar</a>
-                        <a href="/eliminar/<%= dato.id %>" class="btn btn-danger btn-sm">Eliminar</a>
+                        <!-- Botón de Editar -->
+                        <a href="/<%= entidad %>/<%= dato[idField] %>/edit" class="btn btn-primary btn-sm">Editar</a>
+                        <!-- Botón de Eliminar con confirmación -->
+                        <button 
+                            class="btn btn-danger btn-sm" 
+                            onclick="confirmDelete('<%= dato[idField] %>')">
+                            Eliminar
+                        </button>
                     </td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
 </div>
+
+<script>
+    function confirmDelete(id) {
+        if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+            window.location.href = `/<%= entidad %>/${id}/delete`;
+        }
+    }
+</script>

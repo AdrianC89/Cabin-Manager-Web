@@ -1,10 +1,13 @@
-<%- include("templates/header", 
-{tituloWeb: 'Lista de Clientes',
+<%- include("templates/header", {
+    tituloWeb: 'Lista de Clientes',
 }) %>
+
 <%- include("templates/table", {
     titulo: 'Lista de Clientes',
     encabezados: ['DNI', 'Nombre', 'Dirección', 'Teléfono', 'Email'],
-    datos: clientes
+    datos: clientes,
+    entidad: 'clientes',
+    idField: 'dni'
 }) %>
 
 <%- include("templates/footer") %>

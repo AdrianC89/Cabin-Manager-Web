@@ -65,7 +65,24 @@ clientesRouter.delete('/:id', async (req, res) => {
             where: { dni: id }
         });
         if (result) {
-            res.status(204).end();
+            res.redirect('/clientes'); // Redirige a la lista después de eliminar
+        } else {
+            res.status(404).json({ error: "Cliente not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Ruta para eliminar cliente
+clientesRouter.get('/:id/delete', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await Cliente.destroy({
+            where: { dni: id }
+        });
+        if (result) {
+            res.redirect('/clientes'); // Redirige a la lista después de eliminar
         } else {
             res.status(404).json({ error: "Cliente not found" });
         }

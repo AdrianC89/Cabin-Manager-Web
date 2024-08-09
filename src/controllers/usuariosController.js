@@ -68,10 +68,22 @@ usuariosRouter.post('/login', async (req, res) => {
         // Establecer el token en una cookie
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' }); // Ajusta opciones según sea necesario
 
-        res.json({ message: 'Inicio de sesión exitoso' });
+        // Redirigir a la vista de administración
+        res.redirect('/admin');
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
+});
+
+//Vista de panel de administración
+usuariosRouter.get('/admin', (req, res) => {
+    res.render('panel-admin');
+});
+
+//Cerrar Sesión
+usuariosRouter.get('/logout', (req, res) => {
+    res.clearCookie('token'); // Elimina la cookie del token
+    res.redirect('/login'); // Redirige a la página de inicio de sesión
 });
 
 // Obtener perfil de usuario

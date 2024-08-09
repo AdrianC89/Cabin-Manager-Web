@@ -60,6 +60,22 @@ cabanasRouter.put('/:numero', async (req, res) => {
     }
 });
 
+cabanasRouter.get('/:numero/delete', async (req, res) => {
+    try {
+        const { numero } = req.params;
+        const result = await Cabana.destroy({
+            where: { numero }
+        });
+        if (result) {
+            res.redirect('/cabanas'); // Redirige a la lista después de eliminar
+        } else {
+            res.status(404).json({ error: "Cabaña not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 cabanasRouter.delete('/:numero', async (req, res) => {
     try {
         const { numero } = req.params;

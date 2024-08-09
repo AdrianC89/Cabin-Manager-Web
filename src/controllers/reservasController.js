@@ -56,6 +56,22 @@ reservasRouter.put('/:numero_reserva', async (req, res) => {
     }
 });
 
+reservasRouter.get('/:numero_reserva/delete', async (req, res) => {
+    try {
+        const { numero_reserva } = req.params;
+        const result = await Reserva.destroy({
+            where: { numero_reserva }
+        });
+        if (result) {
+            res.redirect('/reservas'); // Redirige a la lista después de eliminar
+        } else {
+            res.status(404).json({ error: "Reserva not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 reservasRouter.delete('/:numero_reserva', async (req, res) => {
     try {
         const { numero_reserva } = req.params;

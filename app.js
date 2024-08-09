@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import path from 'path'; 
 
 
+
 // Importar modelos para la sincronización
 import './src/models/clientesModel.js';
 import './src/models/cabanasModel.js';
@@ -25,6 +26,7 @@ const app = express();
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // Usa cookie-parser para manejar cookies
 
 

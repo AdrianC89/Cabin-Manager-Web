@@ -37,6 +37,25 @@ reservasRouter.post('/', async (req, res) => {
     }
 });
 
+reservasRouter.post('/:id/edit', async (req, res) => {
+    console.log('Datos recibidos:', req.body);
+    try {
+        const { id } = req.params;
+        const reserva = await Reserva.findByPk(id);
+        if (reserva) {
+            await Reserva.update(req.body, {
+                where: {
+                    numero_reserva: id
+                }
+            });
+            res.status(202).json(reserva);
+        } else {
+            res.status(404).json({ error: 'Reserva not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 reservasRouter.put('/:numero_reserva', async (req, res) => {
     try {
         const { numero_reserva } = req.params;

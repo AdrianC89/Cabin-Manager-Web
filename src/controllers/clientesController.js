@@ -58,6 +58,25 @@ clientesRouter.put('/:id', async (req, res) => {
     }
 });
 
+clientesRouter.post('/:id/edit', async (req, res) => {
+    console.log('Datos recibidos:', req.body);
+    try {
+        const { id } = req.params;
+        const cliente = await Cliente.findByPk(id);
+        if (cliente) {
+            await Cliente.update(req.body, {
+                where: {
+                    dni: id
+                }
+            });
+            res.status(202).json(cliente);
+        } else {
+            res.status(404).json({ error: 'Cliente not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 clientesRouter.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;

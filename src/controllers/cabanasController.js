@@ -43,6 +43,28 @@ cabanasRouter.post('/', async (req, res) => {
     }
 });
 
+// Ruta para actualizar una cabaña
+cabanasRouter.post('/:id/edit', async (req, res) => {
+    console.log('Datos recibidos:', req.body);
+    try {
+        const { id } = req.params;
+        const cabana = await Cabana.findByPk(id);
+        if (cabana) {
+            await Cabana.update(req.body, {
+                where: {
+                    numero: id
+                }
+            });
+            res.status(202).json(cabana);
+        } else {
+            res.status(404).json({ error: 'Cabaña not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
 cabanasRouter.put('/:numero', async (req, res) => {
     try {
         const { numero } = req.params;

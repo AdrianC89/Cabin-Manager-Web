@@ -90,22 +90,26 @@
 
 <!-- JavaScript -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var confirmationModal = document.getElementById('confirmationModal');
-        var confirmDeleteButton = document.getElementById('confirmDeleteButton');
-        var editModal = document.getElementById('editModal');
-        var editForm = document.getElementById('editForm');
-        var saveEditButton = document.getElementById('saveEditButton');
-        var recordId = null;
-        var recordData = null;
-        var entity = '<%= entidad %>'; // Obtener la entidad actual (por ejemplo, 'cabanas', 'clientes', 'reservas')
+document.addEventListener('DOMContentLoaded', function () {
+    var confirmationModal = document.getElementById('confirmationModal');
+    var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+    var editModal = document.getElementById('editModal');
+    var editForm = document.getElementById('editForm');
+    var saveEditButton = document.getElementById('saveEditButton');
+    var recordId = null;
+    var recordData = null;
+    var encabezados = []; // Para almacenar los encabezados
+    var entity = '<%= entidad %>'; // Obtener la entidad actual (por ejemplo, 'cabanas', 'clientes', 'reservas')
 
-        // Manejo del modal de edición
+    // Manejo del modal de edición
     editModal.addEventListener('show.bs.modal', function(event) {
         var button = event.relatedTarget;
         recordId = button.getAttribute('data-id');
         recordData = JSON.parse(button.getAttribute('data-info'));
-        var encabezados = JSON.parse(button.getAttribute('data-encabezados'));
+        encabezados = JSON.parse(button.getAttribute('data-encabezados'));
+
+        console.log('Datos a editar:', recordData);
+        console.log('Encabezados:', encabezados);
 
         // Limpiar el formulario antes de agregar nuevos campos
         editForm.innerHTML = '';
@@ -140,38 +144,59 @@
     });
 
     saveEditButton.addEventListener('click', function() {
-        var formData = new FormData(editForm);
-        var endpoint = `/${entity}/${recordId}/edit`; 
+        console.log('Botón Guardar Cambios clicado');
 
-        fetch(endpoint, {
+        var formData = {};
+        encabezados.forEach(function(encabezado, index) {
+            var key = Object.keys(recordData)[index];
+            var input = editForm.querySelector(`[name="${key}"]`);
+
+            if (input) {
+                formData[key] = input.value;
+            } else {
+                console.error('No se encontró el input para:', key);
+            }
+        });
+
+        console.log('Datos que se van a enviar:', formData);
+
+        fetch(`/${entity}/${recordId}/edit`, {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
         }).then(response => {
+            console.log('Respuesta recibida:', response);
+
             if (response.ok) {
+                console.log('Actualización exitosa, recargando página');
                 window.location.reload(); // Recargar la página para ver los cambios
             } else {
+                console.error('Error en la respuesta del servidor:', response.status);
                 alert('Hubo un error al guardar los cambios.');
             }
         }).catch(error => {
-            console.error('Error:', error);
+            console.error('Error durante la solicitud fetch:', error);
             alert('Hubo un error al procesar la solicitud.');
         });
     });
+
+    // Manejo del modal de confirmación de eliminación
     confirmationModal.addEventListener('show.bs.modal', function (event) {
-            // Retrieve data-id attribute from the button that triggered the modal
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-            // Store the id in the confirmDeleteButton
-            confirmDeleteButton.setAttribute('data-id', id);
-        });
+        // Retrieve data-id attribute from the button that triggered the modal
+        var button = event.relatedTarget;
+        var id = button.getAttribute('data-id');
+        // Store the id in the confirmDeleteButton
+        confirmDeleteButton.setAttribute('data-id', id);
+    });
 
-        confirmDeleteButton.addEventListener('click', function () {
-            var id = this.getAttribute('data-id');
-            window.location.href = `/<%= entidad %>/${id}/delete`;
-        });
+    confirmDeleteButton.addEventListener('click', function () {
+        var id = this.getAttribute('data-id');
+        window.location.href = `/${entity}/${id}/delete`;
+    });
 });
-
-    
+  
 </script>
 
 <!-- Bootstrap JS -->

@@ -98,8 +98,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var saveEditButton = document.getElementById('saveEditButton');
     var recordId = null;
     var recordData = null;
-    var encabezados = []; // Para almacenar los encabezados
-    var entity = '<%= entidad %>'; // Obtener la entidad actual (por ejemplo, 'cabanas', 'clientes', 'reservas')
+    var encabezados = [];
+    var entity = '<%= entidad %>';
 
     // Manejo del modal de edición
     editModal.addEventListener('show.bs.modal', function(event) {
@@ -125,17 +125,25 @@ document.addEventListener('DOMContentLoaded', function () {
             // Crear y agregar el label
             var label = document.createElement('label');
             label.className = 'form-label';
-            label.textContent = encabezado;  // Usar el encabezado como label
+            label.textContent = encabezado;
             label.setAttribute('for', key);
             formGroup.appendChild(label);
 
             // Crear y agregar el input
             var input = document.createElement('input');
             input.className = 'form-control';
-            input.setAttribute('type', 'text');
+            input.setAttribute('type', key.includes('fecha') ? 'date' : 'text'); // Detectar campos de fecha
             input.setAttribute('name', key);
             input.setAttribute('id', key);
-            input.value = recordData[key]; // Asignar el valor actual al input
+
+            // Formatear la fecha correctamente para los campos de tipo date
+            if (key.includes('fecha')) {
+                var formattedDate = recordData[key].split('/').reverse().join('-'); // Convertir de dd/mm/yyyy a yyyy-mm-dd
+                input.value = formattedDate;
+            } else {
+                input.value = recordData[key];
+            }
+
             formGroup.appendChild(input);
 
             // Agregar el form-group al formulario
@@ -144,50 +152,53 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     saveEditButton.addEventListener('click', function() {
-        console.log('Botón Guardar Cambios clicado');
+    console.log('Botón Guardar Cambios clicado');
 
-        var formData = {};
-        encabezados.forEach(function(encabezado, index) {
-            var key = Object.keys(recordData)[index];
-            var input = editForm.querySelector(`[name="${key}"]`);
+    var formData = {};
+    encabezados.forEach(function(encabezado, index) {
+        var key = Object.keys(recordData)[index];
+        var input = editForm.querySelector(`[name="${key}"]`);
 
-            if (input) {
+        if (input) {
+            if (key.includes('fecha')) {
+                // Si es una fecha, convertirla al formato ISO
+                let [year, month, day] = input.value.split('-');
+                formData[key] = `${year}-${month}-${day}`;
+            } else {
                 formData[key] = input.value;
-            } else {
-                console.error('No se encontró el input para:', key);
             }
-        });
-
-        console.log('Datos que se van a enviar:', formData);
-
-        fetch(`/${entity}/${recordId}/edit`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        }).then(response => {
-            console.log('Respuesta recibida:', response);
-
-            if (response.ok) {
-                console.log('Actualización exitosa, recargando página');
-                window.location.reload(); // Recargar la página para ver los cambios
-            } else {
-                console.error('Error en la respuesta del servidor:', response.status);
-                alert('Hubo un error al guardar los cambios.');
-            }
-        }).catch(error => {
-            console.error('Error durante la solicitud fetch:', error);
-            alert('Hubo un error al procesar la solicitud.');
-        });
+        } else {
+            console.error('No se encontró el input para:', key);
+        }
     });
 
-    // Manejo del modal de confirmación de eliminación
+    console.log('Datos que se van a enviar:', formData);
+
+    fetch(`/${entity}/${recordId}/edit`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    }).then(response => {
+        console.log('Respuesta recibida:', response);
+
+        if (response.ok) {
+            console.log('Actualización exitosa, recargando página');
+            window.location.reload(); // Recargar la página para ver los cambios
+        } else {
+            console.error('Error en la respuesta del servidor:', response.status);
+            alert('Hubo un error al guardar los cambios.');
+        }
+    }).catch(error => {
+        console.error('Error durante la solicitud fetch:', error);
+        alert('Hubo un error al procesar la solicitud.');
+    });
+});
+
     confirmationModal.addEventListener('show.bs.modal', function (event) {
-        // Retrieve data-id attribute from the button that triggered the modal
         var button = event.relatedTarget;
         var id = button.getAttribute('data-id');
-        // Store the id in the confirmDeleteButton
         confirmDeleteButton.setAttribute('data-id', id);
     });
 
@@ -196,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = `/${entity}/${id}/delete`;
     });
 });
+
   
 </script>
 

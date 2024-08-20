@@ -20,6 +20,8 @@ import usuariosRouter from './src/controllers/usuariosController.js';
 
 // Importar el middleware de autenticación
 import authRequired from './src/middlewares/authenticateToken.js'; // Cambia esto si usas cookies
+import injectUserData from './src/middlewares/injectUserData.js';
+
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // Usa cookie-parser para manejar cookies
 
+// Aplicar el middleware para inyectar datos del usuario en todas las vistas
+app.use(injectUserData);
 
 // Configuración para servir archivos estáticos
 app.use(express.static(path.join(path.resolve(), 'public')));

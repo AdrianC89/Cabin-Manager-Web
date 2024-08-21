@@ -93,6 +93,32 @@
     </div>
 </div>
 
+<!-- Modal de Creación -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Agregar Nuevo Registro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <% encabezados.forEach(function(encabezado, index) { %>
+                        <div class="mb-3">
+                            <label for="<%= encabezado %>" class="form-label"><%= encabezado %></label>
+                            <input type="text" class="form-control" id="<%= encabezado %>" name="<%= encabezado %>" required>
+                        </div>
+                    <% }) %>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveAddButton">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- JavaScript -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -101,6 +127,9 @@
         var editModal = document.getElementById('editModal');
         var editForm = document.getElementById('editForm');
         var saveEditButton = document.getElementById('saveEditButton');
+        var addModal = document.getElementById('addModal');
+        var addForm = document.getElementById('addForm');
+        var saveAddButton = document.getElementById('saveAddButton');
         var recordId = null;
         var recordData = null;
         var encabezados = [];
@@ -211,7 +240,41 @@
             var id = this.getAttribute('data-id');
             window.location.href = `/${entity}/${id}/delete`;
         });
+
+         // Manejo del modal de creación
+        saveAddButton.addEventListener('click', function () {
+            var formData = {};
+            var inputs = addForm.querySelectorAll('input');
+
+            inputs.forEach(function (input) {
+                formData[input.name] = input.value;
+            });
+
+            console.log('Datos que se van a enviar:', formData);
+
+            fetch(`/${entity}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            }).then(response => {
+                console.log('Respuesta recibida:', response);
+
+                if (response.ok) {
+                    console.log('Registro creado con éxito, recargando página');
+                    window.location.reload(); // Recargar la página para ver el nuevo registro
+                } else {
+                    console.error('Error en la respuesta del servidor:', response.status);
+                    alert('Hubo un error al crear el registro.');
+                }
+            }).catch(error => {
+                console.error('Error durante la solicitud fetch:', error);
+                alert('Hubo un error al procesar la solicitud.');
+            });
+        });
     });
+    
 
 
 </script>

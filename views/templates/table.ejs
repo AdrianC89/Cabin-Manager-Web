@@ -9,6 +9,11 @@
         <%= titulo %>
     </h1>
 
+    <!-- Botón para agregar un nuevo registro -->
+    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
+        <i class="fa fa-plus"></i> Agregar Nuevo
+    </button>
+
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
@@ -90,125 +95,125 @@
 
 <!-- JavaScript -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    var confirmationModal = document.getElementById('confirmationModal');
-    var confirmDeleteButton = document.getElementById('confirmDeleteButton');
-    var editModal = document.getElementById('editModal');
-    var editForm = document.getElementById('editForm');
-    var saveEditButton = document.getElementById('saveEditButton');
-    var recordId = null;
-    var recordData = null;
-    var encabezados = [];
-    var entity = '<%= entidad %>';
+    document.addEventListener('DOMContentLoaded', function () {
+        var confirmationModal = document.getElementById('confirmationModal');
+        var confirmDeleteButton = document.getElementById('confirmDeleteButton');
+        var editModal = document.getElementById('editModal');
+        var editForm = document.getElementById('editForm');
+        var saveEditButton = document.getElementById('saveEditButton');
+        var recordId = null;
+        var recordData = null;
+        var encabezados = [];
+        var entity = '<%= entidad %>';
 
-    // Manejo del modal de edición
-    editModal.addEventListener('show.bs.modal', function(event) {
-        var button = event.relatedTarget;
-        recordId = button.getAttribute('data-id');
-        recordData = JSON.parse(button.getAttribute('data-info'));
-        encabezados = JSON.parse(button.getAttribute('data-encabezados'));
+        // Manejo del modal de edición
+        editModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            recordId = button.getAttribute('data-id');
+            recordData = JSON.parse(button.getAttribute('data-info'));
+            encabezados = JSON.parse(button.getAttribute('data-encabezados'));
 
-        console.log('Datos a editar:', recordData);
-        console.log('Encabezados:', encabezados);
+            console.log('Datos a editar:', recordData);
+            console.log('Encabezados:', encabezados);
 
-        // Limpiar el formulario antes de agregar nuevos campos
-        editForm.innerHTML = '';
+            // Limpiar el formulario antes de agregar nuevos campos
+            editForm.innerHTML = '';
 
-        // Generar dinámicamente los campos y labels en base a los encabezados y datos
-        encabezados.forEach(function(encabezado, index) {
-            var key = Object.keys(recordData)[index];
+            // Generar dinámicamente los campos y labels en base a los encabezados y datos
+            encabezados.forEach(function (encabezado, index) {
+                var key = Object.keys(recordData)[index];
 
-            // Crear un div form-group para cada campo
-            var formGroup = document.createElement('div');
-            formGroup.className = 'mb-3';
+                // Crear un div form-group para cada campo
+                var formGroup = document.createElement('div');
+                formGroup.className = 'mb-3';
 
-            // Crear y agregar el label
-            var label = document.createElement('label');
-            label.className = 'form-label';
-            label.textContent = encabezado;
-            label.setAttribute('for', key);
-            formGroup.appendChild(label);
+                // Crear y agregar el label
+                var label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = encabezado;
+                label.setAttribute('for', key);
+                formGroup.appendChild(label);
 
-            // Crear y agregar el input
-            var input = document.createElement('input');
-            input.className = 'form-control';
-            input.setAttribute('type', key.includes('fecha') ? 'date' : 'text'); // Detectar campos de fecha
-            input.setAttribute('name', key);
-            input.setAttribute('id', key);
+                // Crear y agregar el input
+                var input = document.createElement('input');
+                input.className = 'form-control';
+                input.setAttribute('type', key.includes('fecha') ? 'date' : 'text'); // Detectar campos de fecha
+                input.setAttribute('name', key);
+                input.setAttribute('id', key);
 
-            // Formatear la fecha correctamente para los campos de tipo date
-            if (key.includes('fecha')) {
-                var formattedDate = recordData[key].split('/').reverse().join('-'); // Convertir de dd/mm/yyyy a yyyy-mm-dd
-                input.value = formattedDate;
-            } else {
-                input.value = recordData[key];
-            }
+                // Formatear la fecha correctamente para los campos de tipo date
+                if (key.includes('fecha')) {
+                    var formattedDate = recordData[key].split('/').reverse().join('-'); // Convertir de dd/mm/yyyy a yyyy-mm-dd
+                    input.value = formattedDate;
+                } else {
+                    input.value = recordData[key];
+                }
 
-            formGroup.appendChild(input);
+                formGroup.appendChild(input);
 
-            // Agregar el form-group al formulario
-            editForm.appendChild(formGroup);
+                // Agregar el form-group al formulario
+                editForm.appendChild(formGroup);
+            });
+        });
+
+        saveEditButton.addEventListener('click', function () {
+            console.log('Botón Guardar Cambios clicado');
+
+            var formData = {};
+            encabezados.forEach(function (encabezado, index) {
+                var key = Object.keys(recordData)[index];
+                var input = editForm.querySelector(`[name="${key}"]`);
+
+                if (input) {
+                    if (key.includes('fecha')) {
+                        // Si es una fecha, convertirla al formato ISO
+                        let [year, month, day] = input.value.split('-');
+                        formData[key] = `${year}-${month}-${day}`;
+                    } else {
+                        formData[key] = input.value;
+                    }
+                } else {
+                    console.error('No se encontró el input para:', key);
+                }
+            });
+
+            console.log('Datos que se van a enviar:', formData);
+
+            fetch(`/${entity}/${recordId}/edit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            }).then(response => {
+                console.log('Respuesta recibida:', response);
+
+                if (response.ok) {
+                    console.log('Actualización exitosa, recargando página');
+                    window.location.reload(); // Recargar la página para ver los cambios
+                } else {
+                    console.error('Error en la respuesta del servidor:', response.status);
+                    alert('Hubo un error al guardar los cambios.');
+                }
+            }).catch(error => {
+                console.error('Error durante la solicitud fetch:', error);
+                alert('Hubo un error al procesar la solicitud.');
+            });
+        });
+
+        confirmationModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
+            confirmDeleteButton.setAttribute('data-id', id);
+        });
+
+        confirmDeleteButton.addEventListener('click', function () {
+            var id = this.getAttribute('data-id');
+            window.location.href = `/${entity}/${id}/delete`;
         });
     });
 
-    saveEditButton.addEventListener('click', function() {
-    console.log('Botón Guardar Cambios clicado');
 
-    var formData = {};
-    encabezados.forEach(function(encabezado, index) {
-        var key = Object.keys(recordData)[index];
-        var input = editForm.querySelector(`[name="${key}"]`);
-
-        if (input) {
-            if (key.includes('fecha')) {
-                // Si es una fecha, convertirla al formato ISO
-                let [year, month, day] = input.value.split('-');
-                formData[key] = `${year}-${month}-${day}`;
-            } else {
-                formData[key] = input.value;
-            }
-        } else {
-            console.error('No se encontró el input para:', key);
-        }
-    });
-
-    console.log('Datos que se van a enviar:', formData);
-
-    fetch(`/${entity}/${recordId}/edit`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    }).then(response => {
-        console.log('Respuesta recibida:', response);
-
-        if (response.ok) {
-            console.log('Actualización exitosa, recargando página');
-            window.location.reload(); // Recargar la página para ver los cambios
-        } else {
-            console.error('Error en la respuesta del servidor:', response.status);
-            alert('Hubo un error al guardar los cambios.');
-        }
-    }).catch(error => {
-        console.error('Error durante la solicitud fetch:', error);
-        alert('Hubo un error al procesar la solicitud.');
-    });
-});
-
-    confirmationModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        var id = button.getAttribute('data-id');
-        confirmDeleteButton.setAttribute('data-id', id);
-    });
-
-    confirmDeleteButton.addEventListener('click', function () {
-        var id = this.getAttribute('data-id');
-        window.location.href = `/${entity}/${id}/delete`;
-    });
-});
-
-  
 </script>
 
 <!-- Bootstrap JS -->

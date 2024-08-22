@@ -5,6 +5,13 @@
 <%- include("templates/table", {
     titulo: 'Lista de Clientes',
     encabezados: ['DNI', 'Nombre', 'Dirección', 'Teléfono', 'Email'],
+    fieldMapping: {
+        'DNI': 'dni',
+        'Nombre': 'nombre',
+        'Dirección': 'direccion',
+        'Teléfono': 'telefono',
+        'Email': 'email'
+    },
     datos: clientes,
     entidad: 'clientes',
     idField: 'dni'

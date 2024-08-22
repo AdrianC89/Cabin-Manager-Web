@@ -2,6 +2,12 @@
 <%- include("templates/table", {
     titulo: 'Lista de Cabañas',
     encabezados: ['Número', 'Capacidad', 'Descripción', 'Costo Diario'],
+    fieldMapping: {
+        'Número': 'numero',
+        'Capacidad': 'capacidad',
+        'Descripción': 'descripcion',
+        'Costo Diario': 'costo_diario'
+    },
     datos: cabanas,
     entidad: 'cabanas',
     idField: 'numero'

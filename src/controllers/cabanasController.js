@@ -30,19 +30,22 @@ cabanasRouter.get('/:numero', async (req, res) => {
 
 cabanasRouter.post('/', async (req, res) => {
     try {
+        console.log('Datos recibidos en el servidor:', req.body);
         const { numero, capacidad, descripcion, costo_diario } = req.body;
+
         const newCabana = await Cabana.create({
             numero,
             capacidad,
             descripcion,
             costo_diario
         });
+
         res.status(201).json(newCabana);
     } catch (error) {
+        console.error('Error al crear la cabaña:', error);
         res.status(500).json({ error: error.message });
     }
 });
-
 // Ruta para actualizar una cabaña
 cabanasRouter.post('/:id/edit', async (req, res) => {
     console.log('Datos recibidos:', req.body);

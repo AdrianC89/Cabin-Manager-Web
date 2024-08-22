@@ -8,9 +8,21 @@
     return `${day}/${month}/${year}`;
 } %>
 
+<% function toISODate(dateString) {
+    const [day, month, year] = dateString.split('/');
+    return `${year}-${month}-${day}`;
+} %>
+
 <%- include("templates/table", {
     titulo: 'Listado de Reservas',
     encabezados: ['Número de Reserva', 'Fecha Inicio', 'Fecha Fin', 'Cliente DNI', 'Cabaña Número'],
+    fieldMapping: {
+        'Número de Reserva': 'numero_reserva',
+        'Fecha Inicio': 'fecha_inicio',
+        'Fecha Fin': 'fecha_fin',
+        'Cliente DNI': 'cliente_dni',
+        'Cabaña Número': 'cabana_numero'
+    },
     datos: reservas.map(reserva => ({
         numero_reserva: reserva.numero_reserva,
         fecha_inicio: formatDate(reserva.fecha_inicio),

@@ -202,7 +202,7 @@
                 // Crear y agregar el input
                 var input = document.createElement('input');
                 input.className = 'form-control';
-                input.setAttribute('type', key.includes('fecha') ? 'date' : 'text'); // Detectar campos de fecha
+                input.setAttribute('type', key.includes('Fecha') ? 'date' : 'text'); // Detectar campos de fecha
                 input.setAttribute('name', key);
                 input.setAttribute('id', key);
 
@@ -249,50 +249,50 @@
         });
 
         saveAddButton.addEventListener('click', function () {
-            console.log('Botón Guardar clicado');
+    console.log('Botón Guardar clicado');
 
-            var formData = {};
-            encabezados.forEach(function (encabezado, index) {
-                var input = addForm.querySelector(`[name="${encabezado}"]`);
+    var formData = {};
+    encabezados.forEach(function (encabezado, index) {
+        var input = addForm.querySelector(`[name="${encabezado}"]`);
 
-                if (input) {
-                    var fieldName = fieldMapping[encabezado] || encabezado; // Usar el mapeo o el encabezado directamente
+        if (input) {
+            var fieldName = fieldMapping[encabezado] || encabezado; // Usar el mapeo o el encabezado directamente
 
-                    if (fieldName.includes('fecha')) {
-                        let [year, month, day] = input.value.split('-');
-                        formData[fieldName] = `${year}-${month}-${day}`;
-                    } else {
-                        formData[fieldName] = input.value;
-                    }
-                } else {
-                    console.error('No se encontró el input para:', encabezado);
-                }
-            });
+            if (fieldName.includes('fecha')) {
+                // Convertir la fecha a formato ISO antes de enviarla
+                let [year, month, day] = input.value.split('-');
+                formData[fieldName] = `${year}-${month}-${day}`;
+            } else {
+                formData[fieldName] = input.value;
+            }
+        } else {
+            console.error('No se encontró el input para:', encabezado);
+        }
+    });
 
-            console.log('Datos que se van a enviar:', formData);
+    console.log('Datos que se van a enviar:', formData);
 
-            fetch(`/${entity}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            }).then(response => {
-                console.log('Respuesta recibida:', response);
+    fetch(`/${entity}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    }).then(response => {
+        console.log('Respuesta recibida:', response);
 
-                if (response.ok) {
-                    console.log('Creación exitosa, recargando página');
-                    window.location.reload(); // Recargar la página para ver los cambios
-                } else {
-                    console.error('Error en la respuesta del servidor:', response.status);
-                    alert('Hubo un error al guardar el nuevo registro.');
-                }
-            }).catch(error => {
-                console.error('Error durante la solicitud fetch:', error);
-                alert('Hubo un error al procesar la solicitud.');
-            });
-        });
-
+        if (response.ok) {
+            console.log('Creación exitosa, recargando página');
+            window.location.reload(); // Recargar la página para ver los cambios
+        } else {
+            console.error('Error en la respuesta del servidor:', response.status);
+            alert('Hubo un error al guardar el nuevo registro.');
+        }
+    }).catch(error => {
+        console.error('Error durante la solicitud fetch:', error);
+        alert('Hubo un error al procesar la solicitud.');
+    });
+});
         confirmationModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var id = button.getAttribute('data-id');

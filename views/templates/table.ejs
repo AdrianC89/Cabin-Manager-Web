@@ -11,7 +11,7 @@
 
     <!-- Botón para agregar un nuevo registro -->
     <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addModal">
-        <i class="fa fa-plus"></i> Agregar Nuevo
+        <strong><i class="fa fa-plus"></i> Agregar Nuevo</strong>
     </button>
 
     <table class="table table-striped table-bordered">
@@ -35,7 +35,7 @@
                         <% } %>
                             <td>
                                 <!-- Botón de Editar con datos -->
-                                <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                <button class="btn btn-warning btn-lg" data-bs-toggle="modal"
                                     data-bs-target="#editModal" data-id="<%= dato[idField] %>"
                                     data-info='<%= JSON.stringify(dato) %>'
                                     data-encabezados='<%= JSON.stringify(encabezados) %>'>
@@ -43,7 +43,7 @@
                                 </button>
 
                                 <!-- Botón de Eliminar con confirmación -->
-                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                <button class="btn btn-danger btn-lg" data-bs-toggle="modal"
                                     data-bs-target="#confirmationModal" data-id="<%= dato[idField] %>">
                                     <i class="fa-duotone fa-solid fa-trash"></i>
                                 </button>
@@ -53,8 +53,8 @@
         </tbody>
     </table>
     <a href="/admin" class="btn btn-secondary mt-3">
-        <i class="fa fa-arrow-left"></i> Volver al Panel de Administración
-    </a>
+            <i class="fa fa-arrow-left"></i><strong>Volver al Panel de Administración</strong>
+        </a>
 </div>
 <!-- Modal de Edición -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">

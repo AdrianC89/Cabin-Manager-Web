@@ -35,7 +35,7 @@
                         <% } %>
                             <td>
                                 <!-- Botón de Editar con datos -->
-                                <button class="btn btn-warning btn-lg" data-bs-toggle="modal"
+                                <button class="btn btn-warning btn-xs" data-bs-toggle="modal"
                                     data-bs-target="#editModal" data-id="<%= dato[idField] %>"
                                     data-info='<%= JSON.stringify(dato) %>'
                                     data-encabezados='<%= JSON.stringify(encabezados) %>'>
@@ -43,7 +43,7 @@
                                 </button>
 
                                 <!-- Botón de Eliminar con confirmación -->
-                                <button class="btn btn-danger btn-lg" data-bs-toggle="modal"
+                                <button class="btn btn-danger btn-xs" data-bs-toggle="modal"
                                     data-bs-target="#confirmationModal" data-id="<%= dato[idField] %>">
                                     <i class="fa-duotone fa-solid fa-trash"></i>
                                 </button>

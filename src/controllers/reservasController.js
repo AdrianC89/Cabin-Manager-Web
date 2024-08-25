@@ -1,12 +1,31 @@
 import { Router } from 'express';
 import Reserva from '../models/reservasModel.js';
+import Cabana from '../models/cabanasModel.js';  // Asegúrate de importar el modelo de Cabana
+
 
 const reservasRouter = Router();
 
+// Obtener todas las reservas con datos de Cabana
 reservasRouter.get('/', async (req, res) => {
     try {
-        const reservas = await Reserva.findAll();
-        res.render('reservas', { reservas });
+        const reservas = await Reserva.findAll({
+            include: [{ model: Cabana, attributes: ['costo_diario'] }]
+        });
+        
+        const reservasConDetalles = reservas.map(reserva => {
+            const fechaInicio = new Date(reserva.fecha_inicio);
+            const fechaFin = new Date(reserva.fecha_fin);
+            const diasReserva = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+            const costoTotal = diasReserva * reserva.Cabana.costo_diario;
+            
+            return {
+                ...reserva.toJSON(),
+                diasReserva,
+                costoTotal
+            };
+        });
+
+        res.render('reservas', { reservas: reservasConDetalles });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

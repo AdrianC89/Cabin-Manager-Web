@@ -1,38 +1,53 @@
 <%- include("templates/header", { tituloWeb: 'Lista de Reservas' }) %>
 
-<% function formatDate(dateString) {
+<%
+function formatDate(dateString) {
     const date = new Date(dateString);
     const day = ('0' + date.getUTCDate()).slice(-2);
     const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
     const year = date.getUTCFullYear();
     return `${day}/${month}/${year}`;
-} %>
+}
 
-<% function toISODate(dateString) {
-    const [day, month, year] = dateString.split('/');
-    return `${year}-${month}-${day}`;
-} %>
+function calculateDays(startDate, endDate) {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const difference = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    return difference;
+}
+
+function calculateCost(days, dailyRate) {
+    return days * dailyRate;
+}
+%>
 
 <%- include("templates/table", {
     titulo: 'Listado de Reservas',
-    encabezados: ['Número de Reserva', 'Fecha Inicio', 'Fecha Fin', 'Cliente DNI', 'Cabaña Número'],
+    encabezados: ['Número de Reserva', 'Fecha Inicio', 'Fecha Fin', 'Cliente DNI', 'Cabaña Número', 'Días de Reserva', 'Costo Total'],
     fieldMapping: {
         'Número de Reserva': 'numero_reserva',
         'Fecha Inicio': 'fecha_inicio',
         'Fecha Fin': 'fecha_fin',
         'Cliente DNI': 'cliente_dni',
-        'Cabaña Número': 'cabana_numero'
+        'Cabaña Número': 'cabana_numero',
+        'Días de Reserva': 'dias',
+        'Costo Total': 'costo_total'
     },
-    datos: reservas.map(reserva => ({
-        numero_reserva: reserva.numero_reserva,
-        fecha_inicio: formatDate(reserva.fecha_inicio),
-        fecha_fin: formatDate(reserva.fecha_fin),
-        cliente_dni: reserva.cliente_dni,
-        cabana_numero: reserva.cabana_numero
-    })),
+    datos: reservas.map(reserva => {
+        const dias = calculateDays(reserva.fecha_inicio, reserva.fecha_fin);
+        const costo_total = calculateCost(dias, reserva.Cabana.costo_diario);
+        return {
+            numero_reserva: reserva.numero_reserva,
+            fecha_inicio: formatDate(reserva.fecha_inicio),
+            fecha_fin: formatDate(reserva.fecha_fin),
+            cliente_dni: reserva.cliente_dni,
+            cabana_numero: reserva.cabana_numero,
+            dias,
+            costo_total
+        };
+    }),
     entidad: 'reservas',
     idField: 'numero_reserva'
 }) %>
-
 
 <%- include("templates/footer") %>

@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(152, 147, 143);
+  background-color: rgba(208, 236, 241, 0.731);
   background-image: url('../images/complejo-cabanas-cerro-redondo-tandil-pic-9.png');
   background-repeat: no-repeat;
   background-size: cover;
@@ -19,7 +19,7 @@ header {
   margin-right: 2rem;
 }
 .navbar {
-  background: rgb(10, 10, 10);
+  background: rgb(105, 134, 209);
   justify-content: space-between;
 }
 .navbar-nav-center {
@@ -47,15 +47,14 @@ header {
   color: antiquewhite;
 }
 .nav-link:hover {
-  color: rgb(148, 146, 125);
-  font-weight: bolder;
+  color: rgb(235, 218, 32);
 }
 .btn {
   border: 1px solid black;
   color: black;
 }
 .btn:hover {
-  background: rgba(21, 21, 20, 0.377);
+  background: rgba(118, 118, 109, 0.139);
   border: 1px solid black;
 }
 
@@ -66,7 +65,7 @@ header {
 }
 
 .mt-5 {
-  background-color: rgb(234, 229, 221);
+  background-color: rgb(239, 245, 255);
   padding: 2rem;
   margin-bottom: 2rem;
   border-radius: 10px;

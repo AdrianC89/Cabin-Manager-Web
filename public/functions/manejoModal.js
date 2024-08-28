@@ -25,26 +25,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
         encabezados.forEach(function (encabezado, index) {
             var key = Object.keys(recordData)[index];
-            var formGroup = document.createElement('div');
-            formGroup.className = 'mb-3';
-            var label = document.createElement('label');
-            label.className = 'form-label';
-            label.textContent = encabezado;
-            label.setAttribute('for', key);
-            formGroup.appendChild(label);
-            var input = document.createElement('input');
-            input.className = 'form-control';
-            input.setAttribute('type', key.includes('fecha') ? 'date' : 'text');
-            input.setAttribute('name', key);
-            input.setAttribute('id', key);
-            if (key.includes('fecha')) {
-                var formattedDate = recordData[key].split('/').reverse().join('-');
-                input.value = formattedDate;
-            } else {
-                input.value = recordData[key];
+            // Excluye los campos calculados como 'dias' y 'costo_total'
+            if (key !== 'dias' && key !== 'costo_total') {
+                var formGroup = document.createElement('div');
+                formGroup.className = 'mb-3';
+                var label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = encabezado;
+                label.setAttribute('for', key);
+                formGroup.appendChild(label);
+                var input = document.createElement('input');
+                input.className = 'form-control';
+                input.setAttribute('type', key.includes('fecha') ? 'date' : 'text');
+                input.setAttribute('name', key);
+                input.setAttribute('id', key);
+                if (key.includes('fecha')) {
+                    var formattedDate = recordData[key].split('/').reverse().join('-');
+                    input.value = formattedDate;
+                } else {
+                    input.value = recordData[key];
+                }
+                formGroup.appendChild(input);
+                editForm.appendChild(formGroup);
             }
-            formGroup.appendChild(input);
-            editForm.appendChild(formGroup);
         });
     });
 
@@ -53,20 +56,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         encabezados.forEach(function (encabezado) {
             var key = encabezado;
-            var formGroup = document.createElement('div');
-            formGroup.className = 'mb-3';
-            var label = document.createElement('label');
-            label.className = 'form-label';
-            label.textContent = encabezado;
-            label.setAttribute('for', key);
-            formGroup.appendChild(label);
-            var input = document.createElement('input');
-            input.className = 'form-control';
-            input.setAttribute('type', key.includes('Fecha') ? 'date' : 'text');
-            input.setAttribute('name', key);
-            input.setAttribute('id', key);
-            formGroup.appendChild(input);
-            addForm.appendChild(formGroup);
+            // Excluye los campos calculados como 'dias' y 'costo_total'
+            if (!['Días de Reserva', 'Costo Total'].includes(encabezado)) {
+                var formGroup = document.createElement('div');
+                formGroup.className = 'mb-3';
+                var label = document.createElement('label');
+                label.className = 'form-label';
+                label.textContent = encabezado;
+                label.setAttribute('for', key);
+                formGroup.appendChild(label);
+                var input = document.createElement('input');
+                input.className = 'form-control';
+                input.setAttribute('type', key.includes('Fecha') ? 'date' : 'text');
+                input.setAttribute('name', key);
+                input.setAttribute('id', key);
+                formGroup.appendChild(input);
+                addForm.appendChild(formGroup);
+            }
         });
     });
 
@@ -74,16 +80,19 @@ document.addEventListener('DOMContentLoaded', function () {
         var formData = {};
         encabezados.forEach(function (encabezado, index) {
             var key = Object.keys(recordData)[index];
-            var input = editForm.querySelector(`[name="${key}"]`);
-            if (input) {
-                if (key.includes('fecha')) {
-                    let [year, month, day] = input.value.split('-');
-                    formData[key] = `${year}-${month}-${day}`;
+            // Excluye los campos calculados como 'dias' y 'costo_total'
+            if (key !== 'dias' && key !== 'costo_total') {
+                var input = editForm.querySelector(`[name="${key}"]`);
+                if (input) {
+                    if (key.includes('fecha')) {
+                        let [year, month, day] = input.value.split('-');
+                        formData[key] = `${year}-${month}-${day}`;
+                    } else {
+                        formData[key] = input.value;
+                    }
                 } else {
-                    formData[key] = input.value;
+                    console.error('No se encontró el input para:', key);
                 }
-            } else {
-                console.error('No se encontró el input para:', key);
             }
         });
         fetch(`/${entidad}/${recordId}/edit`, {
@@ -106,17 +115,20 @@ document.addEventListener('DOMContentLoaded', function () {
     saveAddButton.addEventListener('click', function () {
         var formData = {};
         encabezados.forEach(function (encabezado) {
-            var input = addForm.querySelector(`[name="${encabezado}"]`);
-            if (input) {
-                var fieldName = fieldMapping[encabezado] || encabezado;
-                if (fieldName.includes('fecha')) {
-                    let [year, month, day] = input.value.split('-');
-                    formData[fieldName] = `${year}-${month}-${day}`;
+            // Excluye los campos calculados como 'dias' y 'costo_total'
+            if (!['Días de Reserva', 'Costo Total'].includes(encabezado)) {
+                var input = addForm.querySelector(`[name="${encabezado}"]`);
+                if (input) {
+                    var fieldName = fieldMapping[encabezado] || encabezado;
+                    if (fieldName.includes('fecha')) {
+                        let [year, month, day] = input.value.split('-');
+                        formData[fieldName] = `${year}-${month}-${day}`;
+                    } else {
+                        formData[fieldName] = input.value;
+                    }
                 } else {
-                    formData[fieldName] = input.value;
+                    console.error('No se encontró el input para:', encabezado);
                 }
-            } else {
-                console.error('No se encontró el input para:', encabezado);
             }
         });
         fetch(`/${entidad}`, {

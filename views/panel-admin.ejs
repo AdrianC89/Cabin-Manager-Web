@@ -7,7 +7,13 @@
             <div class="text-center mb-4">
                 <img src="images/LogoCabin.png" alt="Logo" width="100">
                 <h2 class="mt-3">Menú Principal</h2>
+                <% if (user) { %> <!-- Asegúrate de que esta condición esté revisando 'user' -->
+                <p class="lead">¡Bienvenido, <%= user.nombre %>!</p> <!-- Muestra el nombre del usuario -->
+            <% } else { %>
+                <p class="lead">¡Bienvenido!</p>
+            <% } %>
             </div>
+            
             <div class="list-group">
                 <a href="/clientes" class="list-group-item list-group-item-action">
                     <i class="fas fa-users"></i> Gestionar Clientes

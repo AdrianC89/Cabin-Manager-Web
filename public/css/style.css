@@ -39,9 +39,8 @@ header {
 
 .dropdown-item:hover {
   background: none;
-  color: rgb(131, 129, 113);
+  color: rgb(67, 94, 227);;
   border-radius: 0px;
-  font-weight: bolder;
 }
 .nav-link, .dropdown-toggle {
   color: antiquewhite;
@@ -130,4 +129,34 @@ header {
 }
 .list-group-item i {
   margin-right: 1rem;
+}
+
+#inicio:hover {
+  background-color: #174f8c;
+}
+
+#nuevo, #saveEditButton, #saveAddButton{
+  background-color: rgb(84, 202, 68);
+}
+
+#nuevo:hover, #saveEditButton:hover, #saveAddButton:hover {
+  background-color: rgb(42, 156, 27);
+}
+
+#volver {
+  background: #80bdff;
+}
+#volver:hover {
+  background-color: #174f8c;
+}
+
+#edit {
+  background-color: rgb(236, 236, 71);
+}
+#edit:hover {
+  background-color: rgb(238, 208, 10);
+}
+
+#delete:hover ,#confirmDeleteButton:hover{
+  background-color: rgb(201, 6, 6);
 }

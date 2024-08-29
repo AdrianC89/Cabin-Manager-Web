@@ -63,7 +63,7 @@ usuariosRouter.post('/login', async (req, res) => {
         }
 
         // Generar token JWT
-        const token = jwt.sign({ id: usuario.id, email: usuario.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: usuario.id, nombre: usuario.nombre, apellido: usuario.apellido, foto_perfil: usuario.foto_perfil, email: usuario.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Establecer el token en una cookie
         res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' }); // Ajusta opciones según sea necesario

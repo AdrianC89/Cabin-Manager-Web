@@ -41,11 +41,19 @@
 
           <ul class="navbar-nav navbar-nav-right mb-2 mb-lg-0">
             <% if (user) { %>
-              <li class="nav-item">
-                <a class="nav-link" href="/admin">Panel de Administración</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout">Cerrar Sesión</a>
+              <!-- Menú desplegable para el usuario autenticado -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <!-- Foto de perfil del usuario -->
+                  <img src="<%= user.foto_perfil %>" alt="Foto de perfil" class="rounded-circle" width="30" height="30" style="object-fit: cover; margin-right: 8px;">
+                  <!-- Nombre del usuario -->
+                  <%= user.nombre %> <%= user.apellido %>
+                </a>
+                <!-- Aquí añadimos la clase `dropdown-menu-end` para alinear el menú -->
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="/admin">Panel de Administración</a></li>
+                  <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+                </ul>
               </li>
             <% } else { %>
               <li class="nav-item">

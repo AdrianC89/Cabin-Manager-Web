@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import Reserva from '../models/reservasModel.js';
 import Cabana from '../models/cabanasModel.js';  // Asegúrate de importar el modelo de Cabana
-import PDFDocument from 'pdfkit'; 
+import PDFDocument from 'pdfkit';
 import Cliente from '../models/clientesModel.js';
 import path from 'path';
 import fs from 'fs';
@@ -15,13 +15,13 @@ reservasRouter.get('/', async (req, res) => {
         const reservas = await Reserva.findAll({
             include: [{ model: Cabana, attributes: ['costo_diario'] }]
         });
-        
+
         const reservasConDetalles = reservas.map(reserva => {
             const fechaInicio = new Date(reserva.fecha_inicio);
             const fechaFin = new Date(reserva.fecha_fin);
             const diasReserva = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
             const costoTotal = diasReserva * reserva.Cabana.costo_diario;
-            
+
             return {
                 ...reserva.toJSON(),
                 diasReserva,
@@ -134,6 +134,14 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
+        // Obtener el usuario logueado desde el objeto user inyectado por el middleware injectUserData
+        const user = req.user || res.locals.user;
+
+        if (!user) {
+            console.error('User data not found in request or response locals');
+            return res.status(500).send('Error: User data is missing');
+        }
+
         // Consultar la reserva y obtener los datos relacionados de la cabaña y el cliente
         const reserva = await Reserva.findByPk(id, {
             include: [
@@ -146,13 +154,13 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
             return res.status(404).send('Reserva no encontrada');
         }
 
-        // Función para formatear fechas
+        // Formato de fecha
         const formatDate = (date) => {
             const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
             return new Intl.DateTimeFormat('es-ES', options).format(date);
         };
 
-        // Calcula los días de reserva
+        // Calcular los días de reserva y el costo total
         const fechaInicio = new Date(reserva.fecha_inicio);
         const fechaFin = new Date(reserva.fecha_fin);
         const diasReserva = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
@@ -168,43 +176,47 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
         // Enviar el PDF al cliente
         doc.pipe(res);
 
-        // Agregar la imagen
+        // Añadir el logo alineado a la izquierda
         const imagePath = path.join('./public/images/LogoCabin.png'); // Cambia el path a tu imagen
-        const imageWidth = 200; // Ajusta el ancho según sea necesario
-        const imageHeight = 100; // Ajusta la altura según sea necesario
+        const imageWidth = 150; // Ajusta el ancho según sea necesario
+        const imageHeight = 75; // Ajusta la altura según sea necesario
+        doc.image(imagePath, doc.page.margins.left, 10, { fit: [imageWidth, imageHeight] });
 
-        // Centrar la imagen en la página
-        doc.image(imagePath, {
-            fit: [imageWidth, imageHeight],
-            align: 'left',
-            valign: 'top'
-        });
+        // Añadir el nombre del usuario logueado alineado a la derecha
+        doc.fontSize(8)
+            .text(`Reserva gestionada por: ${user.nombre} ${user.apellido}`,
+                doc.page.width - 200, 50); // Ajusta 200 según el espacio disponible
 
-        doc.moveDown(5); // Agrega un espacio después de la imagen
+        doc.moveDown(4); // Espacio después del encabezado
 
-        // Añadir el título
-        doc.fontSize(16).text('Detalles de la Reserva', { align: 'center' });
-        doc.moveDown(1); // Agrega un espacio después del título
+        // Añadir el título más a la izquierda con subrayado
+        const titleX = doc.page.margins.left; // Ajusta la posición X según sea necesario
+        const titleText = 'DETALLES DE LA RESERVA';
+        const titleWidth = doc.widthOfString(titleText);
 
+        doc.fontSize(15).fillColor('black')
+            .text(titleText, titleX, doc.y);
+
+        doc.moveDown(1);
         // Posición inicial para el recuadro
         const recuadroY = doc.y;
         const recuadroHeight = 250; // Altura del recuadro
         const recuadroWidth = doc.page.width - doc.page.margins.left * 2;
 
-        // Dibujar recuadro
-        doc.rect(doc.page.margins.left, recuadroY, recuadroWidth, recuadroHeight).stroke();
+        // Dibujar recuadro con color de borde negro
+        doc.rect(doc.page.margins.left, recuadroY, recuadroWidth, recuadroHeight)
+            .lineWidth(2)
+            .strokeColor('black')
+            .stroke();
 
         // Configuración para el texto dentro del recuadro
         const textPadding = 10; // Espacio dentro del recuadro
-
-        // Añadir contenido dentro del recuadro
-        doc.fontSize(12);
         let yPosition = recuadroY + textPadding;
 
         // Función auxiliar para agregar líneas de texto
         const addTextLine = (label, value) => {
-            doc.font('Helvetica-Bold').text(label, doc.page.margins.left + textPadding, yPosition);
-            doc.font('Helvetica').text(value, doc.page.margins.left + textPadding + 150, yPosition);
+            doc.font('Helvetica-Bold').fontSize(12).text(label, doc.page.margins.left + textPadding, yPosition);
+            doc.font('Helvetica').fontSize(12).text(value, doc.page.margins.left + textPadding + 150, yPosition);
             yPosition += 20;
         };
 
@@ -216,10 +228,38 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
         addTextLine('Email:', reserva.Cliente.email);
         addTextLine('Cabaña Número:', reserva.Cabana.numero);
         addTextLine('Costo Diario:', `$ ${reserva.Cabana.costo_diario}`);
-        addTextLine('Fecha de Inicio:', formatDate(fechaInicio));
-        addTextLine('Fecha de Fin:', formatDate(fechaFin));
+        addTextLine('Check In:', formatDate(fechaInicio));
+        addTextLine('Check Out:', formatDate(fechaFin));
         addTextLine('Días de Reserva:', `${diasReserva} días`);
         addTextLine('Costo Total:', `$ ${costoTotal}`);
+
+
+        doc.moveDown(5);
+
+        // Añadir pie de página que se mantiene en la parte inferior de la página
+        doc.on('pageAdded', () => {
+            doc.fontSize(10)
+                .text('Este documento fue generado automáticamente por el sistema de reservas.', {
+                    align: 'left',
+                    baseline: 'bottom'
+                });
+        });
+
+        // Llama al pie de página en la página actual
+        doc.fontSize(10)
+            .text('Generado automáticamente por Cabin Manager.', {
+                align: 'left',
+                baseline: 'bottom',
+                pageBreak: true
+            });
+
+        // Añadir fecha al pie de página
+        doc.fontSize(10)
+            .text(`Fecha de Generación: ${formatDate(new Date())}`, {
+                align: 'left',
+                baseline: 'bottom',
+                pageBreak: true
+            });
 
         // Finalizar el documento PDF
         doc.end();
@@ -235,6 +275,5 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
         res.status(500).send('Error al generar el PDF');
     }
 });
-
 
 export default reservasRouter;

@@ -23,11 +23,11 @@ function calculateCost(days, dailyRate) {
 
 <%- include("templates/table", {
     titulo: 'Listado de Reservas',
-    encabezados: ['N° Reserva', 'Fecha Inicio', 'Fecha Fin', 'Cliente DNI', 'Cabaña Número', 'Días de Reserva', 'Costo Total'],
+    encabezados: ['N° Reserva', 'Check In', 'Check Out', 'Cliente DNI', 'Cabaña Número', 'Días de Reserva', 'Costo Total'],
     fieldMapping: {
         'N° Reserva': 'numero_reserva',
-        'Fecha Inicio': 'fecha_inicio',
-        'Fecha Fin': 'fecha_fin',
+        'Check In': 'fecha_inicio',
+        'Check Out': 'fecha_fin',
         'Cliente DNI': 'cliente_dni',
         'Cabaña Número': 'cabana_numero',
         'Días de Reserva': 'dias',

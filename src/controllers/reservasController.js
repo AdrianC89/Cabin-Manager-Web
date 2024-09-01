@@ -73,7 +73,7 @@ reservasRouter.post('/:id/edit', async (req, res) => {
             });
             res.status(202).json(reserva);
         } else {
-            res.status(404).json({ error: 'Reserva not found' });
+            res.status(404).json({ error: 'Reserva no encontrada' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -185,7 +185,7 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
         // Añadir el nombre del usuario logueado alineado a la derecha
         doc.fontSize(8)
             .text(`Reserva gestionada por: ${user.nombre} ${user.apellido}`,
-                doc.page.width - 200, 50); // Ajusta 200 según el espacio disponible
+                doc.page.width - 220, 50); // Ajusta 200 según el espacio disponible
 
         doc.moveDown(4); // Espacio después del encabezado
 

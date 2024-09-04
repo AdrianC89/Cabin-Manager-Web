@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Usuario from '../models/usuariosModel.js';
+import { upload } from '../middlewares/cloudinary.js'; // Importa upload
 
 const usuariosRouter = Router();
 
@@ -35,7 +36,7 @@ usuariosRouter.post('/register', async (req, res) => {
             password: hashedPassword,
         });
 
-        res.status(201).json(newUsuario);
+        res.redirect('/');
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -88,16 +89,46 @@ usuariosRouter.get('/logout', (req, res) => {
 
 // Obtener perfil de usuario
 usuariosRouter.get('/profile', async (req, res) => {
-  try {
-    const { id } = req.user; // Asegúrate de tener middleware de autenticación que establezca req.user
-    const usuario = await Usuario.findByPk(id);
-    if (!usuario) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
+    try {
+        const { id } = res.locals.user; // Usar res.locals.user en lugar de req.user
+        const usuario = await Usuario.findByPk(id);
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        res.render('profile', { usuario }); // Renderiza la vista con los datos del usuario
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    res.json(usuario);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+})
+
+usuariosRouter.post('/profile/edit', upload.single('foto_perfil'), async (req, res) => {
+    try {
+        const { id } = res.locals.user;
+        const { nombre, apellido, password, confirmPassword } = req.body;
+        let updatedData = { nombre, apellido };
+
+        // Si el usuario proporcionó una nueva contraseña, verificar y actualizarla
+        if (password) {
+            if (password !== confirmPassword) {
+                return res.status(400).json({ error: 'Las contraseñas no coinciden' });
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updatedData.password = hashedPassword;
+        }
+
+        // Si se subió una nueva foto de perfil, actualizar la URL de la imagen
+        if (req.file) {
+            updatedData.foto_perfil = req.file.path; // Cloudinary guarda la URL de la imagen en req.file.path
+        }
+
+        // Actualizar el usuario en la base de datos
+        await Usuario.update(updatedData, { where: { id } });
+
+        // Redirigir a la página del perfil después de la actualización
+        res.redirect('/profile');
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 export default usuariosRouter;

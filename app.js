@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
 import express from 'express';
 import cookieParser from 'cookie-parser'; // Importar cookie-parser
 import sequelize from './src/database/connect.js';
@@ -56,13 +59,13 @@ app.get('/', (req, res) => {
     }
 })();
 
-// Usar controladores
-app.use(usuariosRouter);
+app.use('/', usuariosRouter);
 
 // Aplicar el middleware de autenticación a las rutas que deseas proteger
 app.use('/clientes', authRequired, clientesRouter);
 app.use('/cabanas', authRequired, cabanasRouter);
 app.use('/reservas', authRequired, reservasRouter);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

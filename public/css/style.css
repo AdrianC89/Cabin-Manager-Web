@@ -168,3 +168,7 @@ header {
 #downloadPdf:hover {
   background-color: rgb(193, 56, 7);
 }
+
+.dropdown-menu {
+  border-radius: 0 !important;
+}

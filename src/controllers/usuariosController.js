@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import cloudinary from 'cloudinary';
 import Usuario from '../models/usuariosModel.js';
 import { upload } from '../middlewares/cloudinary.js'; // Importa upload
 
@@ -101,11 +102,18 @@ usuariosRouter.get('/profile', async (req, res) => {
     }
 })
 
+
 usuariosRouter.post('/profile/edit', upload.single('foto_perfil'), async (req, res) => {
     try {
         const { id } = res.locals.user;
         const { nombre, apellido, password, confirmPassword } = req.body;
         let updatedData = { nombre, apellido };
+
+        // Buscar el usuario actual en la base de datos
+        const usuario = await Usuario.findByPk(id);
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
 
         // Si el usuario proporcionó una nueva contraseña, verificar y actualizarla
         if (password) {
@@ -116,13 +124,32 @@ usuariosRouter.post('/profile/edit', upload.single('foto_perfil'), async (req, r
             updatedData.password = hashedPassword;
         }
 
-        // Si se subió una nueva foto de perfil, actualizar la URL de la imagen
+        // Si se subió una nueva foto de perfil
         if (req.file) {
-            updatedData.foto_perfil = req.file.path; // Cloudinary guarda la URL de la imagen en req.file.path
+            // Eliminar la imagen anterior de Cloudinary si existe
+            if (usuario.foto_perfil_public_id) {
+                await cloudinary.v2.uploader.destroy(usuario.foto_perfil_public_id);
+            }
+
+            // Actualizar la URL de la nueva imagen y el public_id en los datos a actualizar
+            updatedData.foto_perfil = req.file.path; // URL de la nueva imagen
+            updatedData.foto_perfil_public_id = req.file.filename; // Public ID de la nueva imagen
         }
 
         // Actualizar el usuario en la base de datos
         await Usuario.update(updatedData, { where: { id } });
+
+        // Generar un nuevo token JWT con los datos actualizados
+        const newToken = jwt.sign({ 
+            id: usuario.id, 
+            nombre: updatedData.nombre, 
+            apellido: updatedData.apellido, 
+            foto_perfil: updatedData.foto_perfil || usuario.foto_perfil, 
+            email: usuario.email 
+        }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Establecer el nuevo token en una cookie
+        res.cookie('token', newToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
         // Redirigir a la página del perfil después de la actualización
         res.redirect('/profile');
@@ -130,5 +157,6 @@ usuariosRouter.post('/profile/edit', upload.single('foto_perfil'), async (req, r
         res.status(500).json({ error: error.message });
     }
 });
+
 
 export default usuariosRouter;

@@ -27,6 +27,10 @@ const Usuario = sequelize.define('Usuario', {
   foto_perfil: {
     type: DataTypes.STRING, // URL de la foto de perfil
     allowNull: true,
+  },
+  foto_perfil_public_id: {
+    type: DataTypes.STRING, // Public ID de Cloudinary
+    allowNull: true,
   }
 }, {
   tableName: 'Usuarios',

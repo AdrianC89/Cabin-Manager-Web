@@ -1,6 +1,14 @@
 <%- include("templates/header", 
 {tituloWeb: 'Perfil',
 }) %>
+    <!-- Loader -->
+    <div id="loaderPagina" class="section_loader">
+        <div class="loader">
+          <div class="loader_1"></div>
+          <div class="loader_2"></div>
+          <span class="nota_load">Cargando...</span>
+        </div>
+      </div>
 <div class="container mt-5">
     <h1 class="mb-4">Perfil de <%= usuario.nombre %></h1>
     <form action="/profile/edit" method="POST" enctype="multipart/form-data">

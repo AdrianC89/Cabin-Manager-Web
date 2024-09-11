@@ -1,10 +1,6 @@
 body {
-  background-color: rgba(208, 236, 241, 0.731);
-  background-image: url('../images/complejo-cabanas-cerro-redondo-tandil-pic-9.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center -300px;
+  background-color: #ffffff;
+
 }
 
 
@@ -12,14 +8,14 @@ header {
   position: sticky;
   width: 100%;
   top: 0;
-  
+  z-index: 9999;
 }
 #logo {
   width: 150px;
   margin-right: 2rem;
 }
 .navbar {
-  background: rgb(105, 134, 209);
+  background: rgba(17, 17, 18, 0.792);
   justify-content: space-between;
 }
 .navbar-nav-center {
@@ -43,17 +39,42 @@ header {
   border-radius: 0px;
 }
 .nav-link, .dropdown-toggle {
-  color: antiquewhite;
+  color: rgb(244, 238, 229);
+  font-weight: bold;
 }
 .nav-link:hover {
-  color: rgb(235, 218, 32);
+  color: rgb(206, 203, 174);
 }
+
+.rounded-circle {
+  width: 40px ; 
+  height: 40px;
+  object-fit: cover; 
+  margin-right: 1rem;
+  border: 2px solid #ffffff;
+}
+
+#inicio-sesion, #registro {
+  border: 1px solid whitesmoke;
+  margin: 1rem;
+  border-radius: 25px;
+  max-width: 150px;
+  text-align: center;
+  background-color: rgb(67, 94, 227);
+}
+
+#inicio-sesion:hover, #registro:hover {
+  border: 1px solid rgb(67, 94, 227);
+  color: rgb(67, 94, 227);
+  background-color: whitesmoke;
+}
+
 .btn {
   border: 1px solid black;
   color: black;
 }
 .btn:hover {
-  background: rgba(118, 118, 109, 0.139);
+  background: rgb(105, 139, 203);
   border: 1px solid black;
 }
 
@@ -64,12 +85,48 @@ header {
 }
 
 .mt-5 {
-  background-color: rgb(239, 245, 255);
   padding: 2rem;
   margin-bottom: 2rem;
-  border-radius: 10px;
-  box-shadow: 5px 5px 1.5rem rgb(147, 142, 142);
+  margin-top: 1rem;
 }
+
+/*Index */
+.imagenindex {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.imagenindex img{
+  width: 100%; 
+  height: auto; 
+  display: block; 
+}
+
+.texto-imagen {
+  position: absolute;
+  bottom: 0; 
+  left: 50%;
+  transform: translateX(-50%); 
+  text-align: center;
+  width: 100%;
+}
+
+.lead {
+  margin: auto;
+}
+
+.col-md-12 p {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+#dispositivos{
+  width: 50%; 
+  margin: auto;
+  height: auto; 
+  display: block; 
+}
+
 
 /* Inicio de Sesión */
 .login-container, .register-container, .admin-container{
@@ -173,6 +230,14 @@ header {
   border-radius: 0 !important;
 }
 
+/*Perfil*/
+.img-profile {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 2px solid grey;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+}
 
 
 /* Estilos de Loader */

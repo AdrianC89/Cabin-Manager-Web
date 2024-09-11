@@ -45,7 +45,7 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <!-- Foto de perfil del usuario -->
-                  <img src="<%= user.foto_perfil %>" alt="Foto de perfil" class="rounded-circle" width="40" height="40" style="object-fit: cover; margin-right: 8px;">
+                  <img src="<%= user.foto_perfil %>" alt="Foto de perfil" class="rounded-circle">
                   <!-- Nombre del usuario -->
                   <%= user.nombre %> <%= user.apellido %>
                 </a>
@@ -58,10 +58,10 @@
               </li>
             <% } else { %>
               <li class="nav-item">
-                <a class="nav-link" href="/login">Iniciar Sesión</a>
+                <a class="nav-link" href="/login" id="inicio-sesion">Iniciar Sesión</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/register">Registrarse</a>
+                <a class="nav-link" href="/register" id="registro">Registrarse</a>
               </li>
             <% } %>
           </ul>

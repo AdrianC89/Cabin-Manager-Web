@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 formGroup.appendChild(label);
                 var input = document.createElement('input');
                 input.className = 'form-control';
-                input.setAttribute('type', key.includes('fecha') ? 'date' : 'text');
+                input.setAttribute('type', key.includes('check') ? 'date' : 'text');
                 input.setAttribute('name', key);
                 input.setAttribute('id', key);
                 if (key.includes('fecha')) {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 formGroup.appendChild(label);
                 var input = document.createElement('input');
                 input.className = 'form-control';
-                input.setAttribute('type', key.includes('Fecha') ? 'date' : 'text');
+                input.setAttribute('type', key.includes('Check') ? 'date' : 'text');
                 input.setAttribute('name', key);
                 input.setAttribute('id', key);
                 formGroup.appendChild(input);
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key !== 'dias' && key !== 'costo_total') {
                 var input = editForm.querySelector(`[name="${key}"]`);
                 if (input) {
-                    if (key.includes('fecha')) {
+                    if (key.includes('Check')) {
                         let [year, month, day] = input.value.split('-');
                         formData[key] = `${year}-${month}-${day}`;
                     } else {
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var input = addForm.querySelector(`[name="${encabezado}"]`);
                 if (input) {
                     var fieldName = fieldMapping[encabezado] || encabezado;
-                    if (fieldName.includes('fecha')) {
+                    if (fieldName.includes('Check')) {
                         let [year, month, day] = input.value.split('-');
                         formData[fieldName] = `${year}-${month}-${day}`;
                     } else {

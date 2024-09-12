@@ -15,7 +15,7 @@ header {
   margin-right: 2rem;
 }
 .navbar {
-  background: rgba(17, 17, 18, 0.792);
+  background: rgb(42, 42, 45);
   justify-content: space-between;
 }
 .navbar-nav-center {
@@ -29,20 +29,20 @@ header {
 }
 
 .dropdown-menu {
-  background: rgb(234, 229, 221);
-  
+  background: rgb(42, 42, 45);
+  border: none; 
 }
 
-.dropdown-item:hover {
+.dropdown-item:hover{
   background: none;
-  color: rgb(67, 94, 227);;
-  border-radius: 0px;
 }
-.nav-link, .dropdown-toggle {
+
+
+.nav-link, .dropdown-toggle, .dropdown-item {
   color: rgb(244, 238, 229);
   font-weight: bold;
 }
-.nav-link:hover {
+.nav-link:hover,.dropdown-item:hover {
   color: rgb(206, 203, 174);
 }
 

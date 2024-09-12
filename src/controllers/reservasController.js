@@ -155,10 +155,13 @@ reservasRouter.get('/pdf/:id', async (req, res) => {
         }
 
         // Formato de fecha
-        const formatDate = (date) => {
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            return new Intl.DateTimeFormat('es-ES', options).format(date);
-        };
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = ('0' + date.getUTCDate()).slice(-2);
+            const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
+            const year = date.getUTCFullYear();
+            return `${day}/${month}/${year}`;
+        }
 
         // Calcular los días de reserva y el costo total
         const fechaInicio = new Date(reserva.fecha_inicio);

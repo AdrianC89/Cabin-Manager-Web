@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         encabezados.forEach(function (encabezado, index) {
             var key = Object.keys(recordData)[index];
             // Excluye los campos calculados como 'dias' y 'costo_total'
-            if (key !== 'dias' && key !== 'costo_total') {
+            if (key !== 'dias' && key !== 'costo_total' && key !== 'numero_reserva') {
                 var formGroup = document.createElement('div');
                 formGroup.className = 'mb-3';
                 var label = document.createElement('label');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
         encabezados.forEach(function (encabezado) {
             var key = encabezado;
             // Excluye los campos calculados como 'dias' y 'costo_total'
-            if (!['Días de Reserva', 'Costo Total'].includes(encabezado)) {
+            if (!['Días de Reserva', 'Costo Total', 'N° Reserva'].includes(encabezado)) {
                 var formGroup = document.createElement('div');
                 formGroup.className = 'mb-3';
                 var label = document.createElement('label');
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (key !== 'dias' && key !== 'costo_total') {
                 var input = editForm.querySelector(`[name="${key}"]`);
                 if (input) {
-                    if (key.includes('fecha')) {
+                    if (key.includes('Check')) {
                         let [year, month, day] = input.value.split('-');
                         formData[key] = `${year}-${month}-${day}`;
                     } else {
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var input = addForm.querySelector(`[name="${encabezado}"]`);
                 if (input) {
                     var fieldName = fieldMapping[encabezado] || encabezado;
-                    if (fieldName.includes('fecha')) {
+                    if (fieldName.includes('Check')) {
                         let [year, month, day] = input.value.split('-');
                         formData[fieldName] = `${year}-${month}-${day}`;
                     } else {

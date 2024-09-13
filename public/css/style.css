@@ -28,15 +28,27 @@ header {
   margin-left: auto;
 }
 
-.dropdown-menu {
-  background: rgb(42, 42, 45);
-  border: none; 
-}
 
 .dropdown-item:hover{
   background: none;
 }
+/* Ocultar inicialmente */
+.dropdown-menu {
+  display: block;
+  background: rgb(42, 42, 45);
+  border: none;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px); /* Mover hacia arriba para animación */
+  transition: all 0.5s ease;
+}
 
+/* Cuando se muestra el dropdown */
+.dropdown-menu.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0); /* Mover de nuevo a la posición original */
+}
 
 .nav-link, .dropdown-toggle, .dropdown-item {
   color: rgb(244, 238, 229);
@@ -227,7 +239,7 @@ header {
 }
 
 .dropdown-menu {
-  border-radius: 0 !important;
+  border-radius: 0 0 10px 10px !important;
 }
 
 /*Perfil*/

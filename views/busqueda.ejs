@@ -1,0 +1,94 @@
+<%- include("templates/header", { tituloWeb: 'Buscar' }) %>
+
+<div class="container">
+    <h2 class="text-center my-4">Buscar</h2>
+
+    <!-- Formulario para buscar clientes por nombre -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Buscar Clientes por Nombre</h5>
+            <form id="buscarClientesForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre del Cliente:</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Ingrese el nombre">
+                </div>
+                <button type="button" class="btn btn-primary mt-2" onclick="buscarClientes()">Buscar</button>
+            </form>
+
+            <!-- Contenedor para mostrar resultados de clientes -->
+            <div id="resultadosClientes" class="mt-3"></div>
+        </div>
+    </div>
+
+    <!-- Formulario para buscar cabañas libres por rango de fechas -->
+    <div class="card">
+        <div class="card-body">
+            <h5>Búsqueda de Cabañas Libres</h5>
+            <form id="buscarCabanasForm">
+                <div class="form-group">
+                    <label for="fecha_inicio">Fecha de Inicio:</label>
+                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="fecha_fin">Fecha de Fin:</label>
+                    <input type="date" id="fecha_fin" name="fecha_fin" class="form-control">
+                </div>
+                <button type="button" class="btn btn-primary mt-2" onclick="buscarCabanas()">Buscar</button>
+            </form>
+
+            <!-- Contenedor para mostrar resultados de cabañas -->
+            <div id="resultadosCabanas" class="mt-3"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Función para buscar clientes mediante AJAX
+    function buscarClientes() {
+        const nombre = document.getElementById('nombre').value;
+        
+        fetch(`/buscar/clientes?nombre=${nombre}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultadosClientes = document.getElementById('resultadosClientes');
+                resultadosClientes.innerHTML = '';
+
+                if (data.clientes && data.clientes.length > 0) {
+                    data.clientes.forEach(cliente => {
+                        const clienteElement = document.createElement('p');
+                        clienteElement.textContent = `${cliente.nombre}`;
+                        resultadosClientes.appendChild(clienteElement);
+                    });
+                } else {
+                    resultadosClientes.innerHTML = '<p>No se encontraron clientes con ese nombre.</p>';
+                }
+            })
+            .catch(error => console.error('Error en la búsqueda de clientes:', error));
+    }
+
+    // Función para buscar cabañas libres mediante AJAX
+    function buscarCabanas() {
+        const fechaInicio = document.getElementById('fecha_inicio').value;
+        const fechaFin = document.getElementById('fecha_fin').value;
+        
+        fetch(`/buscar/cabanas?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultadosCabanas = document.getElementById('resultadosCabanas');
+                resultadosCabanas.innerHTML = '';
+
+                if (data.cabanas && data.cabanas.length > 0) {
+                    data.cabanas.forEach(cabana => {
+                        const cabanaElement = document.createElement('p');
+                        cabanaElement.textContent = `Cabaña Nº ${cabana.numero} - Capacidad: ${cabana.capacidad} personas`;
+                        resultadosCabanas.appendChild(cabanaElement);
+                    });
+                } else {
+                    resultadosCabanas.innerHTML = '<p>No hay cabañas disponibles para el rango de fechas seleccionado.</p>';
+                }
+            })
+            .catch(error => console.error('Error en la búsqueda de cabañas:', error));
+    }
+</script>
+
+<%- include("templates/footer") %>

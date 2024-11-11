@@ -20,6 +20,7 @@ import clientesRouter from './src/controllers/clientesController.js';
 import cabanasRouter from './src/controllers/cabanasController.js';
 import reservasRouter from './src/controllers/reservasController.js';
 import usuariosRouter from './src/controllers/usuariosController.js';
+import busquedaRouter from './src/controllers/busquedaController.js';
 
 // Importar el middleware de autenticación
 import authRequired from './src/middlewares/authenticateToken.js'; // Cambia esto si usas cookies
@@ -65,6 +66,8 @@ app.use('/', usuariosRouter);
 app.use('/clientes', authRequired, clientesRouter);
 app.use('/cabanas', authRequired, cabanasRouter);
 app.use('/reservas', authRequired, reservasRouter);
+app.use('/buscar', authRequired, busquedaRouter);
+
 
 
 const PORT = process.env.PORT || 3000;

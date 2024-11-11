@@ -68,18 +68,21 @@ header {
 }
 
 #inicio-sesion, #registro {
-  border: 1px solid whitesmoke;
   margin: 1rem;
   border-radius: 25px;
   max-width: 150px;
   text-align: center;
   background-color: rgb(67, 94, 227);
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-shadow: 3px 3px 0px rgb(46, 63, 150);
+
 }
 
 #inicio-sesion:hover, #registro:hover {
-  border: 1px solid rgb(67, 94, 227);
   color: rgb(67, 94, 227);
   background-color: whitesmoke;
+  box-shadow: 3px 3px 0px rgb(163, 164, 166);
 }
 
 .btn {
@@ -342,4 +345,6 @@ header {
 .piepagina p {
   font-weight: bold;
 }
+
+
 

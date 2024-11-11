@@ -42,11 +42,16 @@
     </div>
 </div>
 
-<script>
+<<script>
+    // Establecer la fecha mínima como la fecha actual
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha_inicio').setAttribute('min', today);
+    document.getElementById('fecha_fin').setAttribute('min', today);
+
     // Función para buscar clientes mediante AJAX
     function buscarClientes() {
         const nombre = document.getElementById('nombre').value;
-        
+
         fetch(`/buscar/clientes?nombre=${nombre}`)
             .then(response => response.json())
             .then(data => {
@@ -70,7 +75,14 @@
     function buscarCabanas() {
         const fechaInicio = document.getElementById('fecha_inicio').value;
         const fechaFin = document.getElementById('fecha_fin').value;
-        
+
+        // Validar que la fecha de inicio sea anterior a la fecha de fin
+        if (fechaInicio && fechaFin && new Date(fechaInicio) > new Date(fechaFin)) {
+            alert('La fecha de inicio no puede ser posterior a la fecha de fin.');
+            return;
+        }
+
+        // Si las fechas son válidas, realiza la búsqueda
         fetch(`/buscar/cabanas?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`)
             .then(response => response.json())
             .then(data => {

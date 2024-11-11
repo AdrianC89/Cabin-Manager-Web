@@ -16,6 +16,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // Función para establecer la fecha mínima en los campos de fecha
+    function setMinDateForDateFields(form) {
+        const today = new Date().toISOString().split('T')[0]; // Fecha actual en formato YYYY-MM-DD
+        const dateInputs = form.querySelectorAll('input[type="date"]');
+        dateInputs.forEach(function(input) {
+            input.setAttribute('min', today);
+        });
+    }
+
+    // Al mostrar el modal de edición, establecer las fechas mínimas
     editModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
         recordId = button.getAttribute('data-id');
@@ -49,8 +59,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 editForm.appendChild(formGroup);
             }
         });
+
+        // Establecer la fecha mínima para los campos de fecha
+        setMinDateForDateFields(editForm);
     });
 
+    // Al mostrar el modal de adición, establecer las fechas mínimas
     addModal.addEventListener('show.bs.modal', function (event) {
         addForm.innerHTML = '';
 
@@ -74,6 +88,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 addForm.appendChild(formGroup);
             }
         });
+
+        // Establecer la fecha mínima para los campos de fecha
+        setMinDateForDateFields(addForm);
     });
 
     saveEditButton.addEventListener('click', function () {

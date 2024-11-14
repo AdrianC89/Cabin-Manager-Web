@@ -17,7 +17,7 @@ function calculateDays(startDate, endDate) {
 }
 
 function calculateCost(days, dailyRate) {
-    return days * dailyRate;
+    return `$ ${(days * dailyRate).toFixed(2)}`; // Agregar símbolo de $ y formatear a 2 decimales
 }
 %>
 

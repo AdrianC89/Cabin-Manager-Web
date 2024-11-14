@@ -18,10 +18,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para establecer la fecha mínima en los campos de fecha
     function setMinDateForDateFields(form) {
-        const today = new Date().toISOString().split('T')[0]; // Fecha actual en formato YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0];
         const dateInputs = form.querySelectorAll('input[type="date"]');
-        dateInputs.forEach(function(input) {
+        dateInputs.forEach(function (input) {
             input.setAttribute('min', today);
+        });
+    }
+
+     function validateDateRange(fechaInicio, fechaFin) {
+        if (fechaInicio && fechaFin && new Date(fechaInicio) > new Date(fechaFin)) {
+            Swal.fire({
+                icon: "warning",
+                title: "¡Atención!",
+                text: "La fecha de Check In no puede ser posterior a la fecha de Check Out.",
+              });
+            return false;
+        }
+        return true;
+    }
+
+    function reservaExitosa (){
+        Swal.fire({
+            icon: 'success',
+            title: '¡Reserva agregada exitosamente!',
+        }).then(() => {
+            window.location.reload(); 
         });
     }
 
@@ -32,10 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
         recordData = JSON.parse(button.getAttribute('data-info'));
 
         editForm.innerHTML = '';
-
         encabezados.forEach(function (encabezado, index) {
             var key = Object.keys(recordData)[index];
-            // Excluye los campos calculados como 'dias' y 'costo_total'
             if (key !== 'dias' && key !== 'costo_total' && key !== 'numero_reserva') {
                 var formGroup = document.createElement('div');
                 formGroup.className = 'mb-3';
@@ -60,17 +79,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Establecer la fecha mínima para los campos de fecha
         setMinDateForDateFields(editForm);
     });
 
-    // Al mostrar el modal de adición, establecer las fechas mínimas
     addModal.addEventListener('show.bs.modal', function (event) {
         addForm.innerHTML = '';
-
         encabezados.forEach(function (encabezado) {
             var key = encabezado;
-            // Excluye los campos calculados como 'dias' y 'costo_total'
             if (!['Días de Reserva', 'Costo Total', 'N° Reserva'].includes(encabezado)) {
                 var formGroup = document.createElement('div');
                 formGroup.className = 'mb-3';
@@ -89,15 +104,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Establecer la fecha mínima para los campos de fecha
         setMinDateForDateFields(addForm);
     });
 
     saveEditButton.addEventListener('click', function () {
+        var fechaInicio = editForm.querySelector('[name="fecha_inicio"]')?.value;
+        var fechaFin = editForm.querySelector('[name="fecha_fin"]')?.value;
+        if (!validateDateRange(fechaInicio, fechaFin)) return;
+
         var formData = {};
         encabezados.forEach(function (encabezado, index) {
             var key = Object.keys(recordData)[index];
-            // Excluye los campos calculados como 'dias' y 'costo_total'
             if (key !== 'dias' && key !== 'costo_total') {
                 var input = editForm.querySelector(`[name="${key}"]`);
                 if (input) {
@@ -120,7 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         }).then(response => {
             if (response.ok) {
-                window.location.reload();
+                
+                reservaExitosa()
             } else {
                 alert('Hubo un error al guardar los cambios.');
             }
@@ -130,9 +148,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     saveAddButton.addEventListener('click', function () {
+        var fechaInicio = addForm.querySelector('[name="Check In"]')?.value;
+        var fechaFin = addForm.querySelector('[name="Check Out"]')?.value;
+        if (!validateDateRange(fechaInicio, fechaFin)) return;
+
         var formData = {};
         encabezados.forEach(function (encabezado) {
-            // Excluye los campos calculados como 'dias' y 'costo_total'
             if (!['Días de Reserva', 'Costo Total'].includes(encabezado)) {
                 var input = addForm.querySelector(`[name="${encabezado}"]`);
                 if (input) {
@@ -156,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         }).then(response => {
             if (response.ok) {
-                window.location.reload();
+                reservaExitosa();
             } else {
                 alert('Hubo un error al guardar el nuevo registro.');
             }

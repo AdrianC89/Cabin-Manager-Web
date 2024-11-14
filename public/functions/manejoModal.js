@@ -43,14 +43,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    function exito() {
+    function exito(accion) {
         var displayName = entityDisplayNames[entidad] || entidad; // Usa el nombre personalizado si está disponible
         var actionText = '';
 
-        // Determina el mensaje basado en la entidad
-        if (entidad === 'reservas' || entidad === 'cabanas') {
-            actionText = 'agregada';
-        } else if (entidad === 'clientes') {
+        // Determina el mensaje basado en la acción (editar o agregar)
+        if (accion === 'edit') {
+            actionText = 'editado';
+        } else if (accion === 'add') {
             actionText = 'agregado';
         }
 
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         }).then(response => {
             if (response.ok) {
-                exito(); // Llamada a la nueva función de éxito
+                exito('edit'); // Llamada a la nueva función de éxito con 'edit'
             } else {
                 alert('Hubo un error al guardar los cambios.');
             }
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         }).then(response => {
             if (response.ok) {
-                exito(); // Llamada a la nueva función de éxito
+                exito('add'); // Llamada a la nueva función de éxito con 'add'
             } else {
                 alert('Hubo un error al guardar el nuevo registro.');
             }

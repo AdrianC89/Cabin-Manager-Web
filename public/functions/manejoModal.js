@@ -9,14 +9,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var addModal = document.getElementById('addModal');
     var addForm = document.getElementById('addForm');
     var saveAddButton = document.getElementById('saveAddButton');
-    var entidad = window.entidad; // Usa la variable `entidad` inyectada en el HTML
+    var entidad = window.entidad;
+
+    // Mapeo para mostrar nombres personalizados de las entidades
+    var entityDisplayNames = {
+        cabanas: "Cabaña",
+        reservas: "Reserva",
+        clientes: "Cliente"
+    };
 
     if (!confirmationModal || !editModal || !addModal) {
         console.error('Uno o más modales no se encontraron');
         return;
     }
 
-    // Función para establecer la fecha mínima en los campos de fecha
     function setMinDateForDateFields(form) {
         const today = new Date().toISOString().split('T')[0];
         const dateInputs = form.querySelectorAll('input[type="date"]');
@@ -25,28 +31,37 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-     function validateDateRange(fechaInicio, fechaFin) {
+    function validateDateRange(fechaInicio, fechaFin) {
         if (fechaInicio && fechaFin && new Date(fechaInicio) > new Date(fechaFin)) {
             Swal.fire({
                 icon: "warning",
                 title: "¡Atención!",
                 text: "La fecha de Check In no puede ser posterior a la fecha de Check Out.",
-              });
+            });
             return false;
         }
         return true;
     }
 
-    function reservaExitosa (){
+    function exito() {
+        var displayName = entityDisplayNames[entidad] || entidad; // Usa el nombre personalizado si está disponible
+        var actionText = '';
+
+        // Determina el mensaje basado en la entidad
+        if (entidad === 'reservas' || entidad === 'cabanas') {
+            actionText = 'agregada';
+        } else if (entidad === 'clientes') {
+            actionText = 'agregado';
+        }
+
         Swal.fire({
             icon: 'success',
-            title: '¡Reserva agregada exitosamente!',
+            title: `¡${displayName} ${actionText} exitosamente!`,
         }).then(() => {
-            window.location.reload(); 
+            window.location.reload();
         });
     }
 
-    // Al mostrar el modal de edición, establecer las fechas mínimas
     editModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
         recordId = button.getAttribute('data-id');
@@ -129,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
+
         fetch(`/${entidad}/${recordId}/edit`, {
             method: 'POST',
             headers: {
@@ -137,8 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         }).then(response => {
             if (response.ok) {
-                
-                reservaExitosa()
+                exito(); // Llamada a la nueva función de éxito
             } else {
                 alert('Hubo un error al guardar los cambios.');
             }
@@ -169,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
+
         fetch(`/${entidad}`, {
             method: 'POST',
             headers: {
@@ -177,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify(formData),
         }).then(response => {
             if (response.ok) {
-                reservaExitosa();
+                exito(); // Llamada a la nueva función de éxito
             } else {
                 alert('Hubo un error al guardar el nuevo registro.');
             }

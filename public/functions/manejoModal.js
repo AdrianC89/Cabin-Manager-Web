@@ -49,14 +49,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Determina el mensaje basado en la acción (editar o agregar)
         if (accion === 'edit') {
-            actionText = 'editado';
+            actionText = 'Se editó';
         } else if (accion === 'add') {
-            actionText = 'agregado';
+            actionText = 'Se creó';
         }
 
         Swal.fire({
             icon: 'success',
-            title: `¡${displayName} ${actionText} exitosamente!`,
+            title: `¡${actionText} ${displayName} exitosamente!`,
         }).then(() => {
             window.location.reload();
         });
@@ -155,10 +155,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 exito('edit'); // Llamada a la nueva función de éxito con 'edit'
             } else {
-                alert('Hubo un error al guardar los cambios.');
+                // Manejo de error con SweetAlert
+                response.json().then(data => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al editar',
+                        text: data.error || 'Hubo un error al guardar los cambios.',
+                    });
+                });
             }
         }).catch(error => {
-            alert('Hubo un error al procesar la solicitud.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de red',
+                text: 'Hubo un error al procesar la solicitud. Por favor, intenta nuevamente.',
+            });
         });
     });
 
@@ -195,10 +206,21 @@ document.addEventListener('DOMContentLoaded', function () {
             if (response.ok) {
                 exito('add'); // Llamada a la nueva función de éxito con 'add'
             } else {
-                alert('Hubo un error al guardar el nuevo registro.');
+                // Manejo de error con SweetAlert
+                response.json().then(data => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error al crear',
+                        text: data.error || 'Hubo un error al guardar el nuevo registro.',
+                    });
+                });
             }
         }).catch(error => {
-            alert('Hubo un error al procesar la solicitud.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de red',
+                text: 'Hubo un error al procesar la solicitud. Por favor, intenta nuevamente.',
+            });
         });
     });
 

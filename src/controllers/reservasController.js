@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Reserva from '../models/reservasModel.js';
+import { Op } from 'sequelize';
 import Cabana from '../models/cabanasModel.js';  // Asegúrate de importar el modelo de Cabana
 import PDFDocument from 'pdfkit';
 import Cliente from '../models/clientesModel.js';
@@ -44,9 +45,40 @@ reservasRouter.get('/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 reservasRouter.post('/', async (req, res) => {
     try {
         const { fecha_inicio, fecha_fin, cliente_dni, cabana_numero } = req.body;
+
+        // Convertir fechas a un formato adecuado para comparación
+        const startDate = new Date(fecha_inicio);
+        const endDate = new Date(fecha_fin);
+
+        // Verificar si ya existe una reserva para la misma cabaña y en el rango de fechas solicitado
+        const existingReserva = await Reserva.findOne({
+            where: {
+                cabana_numero,
+                [Op.or]: [
+                    {
+                        fecha_inicio: { [Op.between]: [startDate, endDate] }
+                    },
+                    {
+                        fecha_fin: { [Op.between]: [startDate, endDate] }
+                    },
+                    {
+                        fecha_inicio: { [Op.lte]: startDate },
+                        fecha_fin: { [Op.gte]: endDate }
+                    }
+                ]
+            }
+        });
+
+        if (existingReserva) {
+            // Enviar un error si la cabaña ya está reservada en el mismo período
+            return res.status(400).json({ error: 'La cabaña ya está reservada en este rango de fechas.' });
+        }
+
+        // Crear la reserva si no hay conflictos
         const newReserva = await Reserva.create({
             fecha_inicio,
             fecha_fin,
@@ -60,43 +92,53 @@ reservasRouter.post('/', async (req, res) => {
     }
 });
 
+
 reservasRouter.post('/:id/edit', async (req, res) => {
     console.log('Datos recibidos:', req.body);
     try {
         const { id } = req.params;
-        const reserva = await Reserva.findByPk(id);
-        if (reserva) {
-            await Reserva.update(req.body, {
-                where: {
-                    numero_reserva: id
-                }
-            });
-            res.status(202).json(reserva);
-        } else {
-            res.status(404).json({ error: 'Reserva no encontrada' });
+        const { cabana_numero, fecha_inicio: startDate, fecha_fin: endDate } = req.body;
+
+        // Verificar si ya existe una reserva para la misma cabaña y en el rango de fechas solicitado
+        const existingReserva = await Reserva.findOne({
+            where: {
+                cabana_numero,
+                [Op.or]: [
+                    {
+                        fecha_inicio: { [Op.between]: [startDate, endDate] }
+                    },
+                    {
+                        fecha_fin: { [Op.between]: [startDate, endDate] }
+                    },
+                    {
+                        fecha_inicio: { [Op.lte]: startDate },
+                        fecha_fin: { [Op.gte]: endDate }
+                    }
+                ]
+            }
+        });
+
+        if (existingReserva && existingReserva.numero_reserva !== parseInt(id, 10)) {
+            // Enviar un error si la cabaña ya está reservada en el mismo período
+            return res.status(400).json({ error: 'La cabaña ya está reservada en este rango de fechas.' });
         }
+
+        // Actualizar la reserva si no existe conflicto de fechas
+        await Reserva.update(req.body, {
+            where: {
+                numero_reserva: id
+            }
+        });
+
+        // Obtener la reserva actualizada
+        const updatedReserva = await Reserva.findByPk(id);
+
+        res.status(202).json(updatedReserva);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
-reservasRouter.put('/:numero_reserva', async (req, res) => {
-    try {
-        const { numero_reserva } = req.params;
-        const reserva = await Reserva.findByPk(numero_reserva);
-        if (reserva) {
-            await Reserva.update(req.body, {
-                where: { numero_reserva }
-            });
-            const updatedReserva = await Reserva.findByPk(numero_reserva);
-            const plainReserva = updatedReserva.toJSON();
-            res.status(202).json(plainReserva);
-        } else {
-            res.status(404).json({ error: 'Reserva no encontrada' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+
 
 reservasRouter.get('/:numero_reserva/delete', async (req, res) => {
     try {

@@ -65,6 +65,36 @@
                 input.attr('type', 'password');
             }
         });
+
+        $('form').on('submit', function(event) {
+            event.preventDefault(); // Evita el envío tradicional del formulario
+            const formData = $(this).serialize(); // Serializa el formulario
+
+            $.ajax({
+                url: '/register',
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Registro exitoso!',
+                        text: response.success,
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.href = '/'; // Redirige después de un registro exitoso
+                    });
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : 'Ocurrió un error inesperado';
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMsg
+                    });
+                }
+            });
+        });
     });
 </script>
 <%- include("templates/footer") %>

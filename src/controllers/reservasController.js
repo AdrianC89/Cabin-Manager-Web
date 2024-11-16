@@ -5,7 +5,6 @@ import Cabana from '../models/cabanasModel.js';  // Asegúrate de importar el mo
 import PDFDocument from 'pdfkit';
 import Cliente from '../models/clientesModel.js';
 import path from 'path';
-import fs from 'fs';
 
 
 const reservasRouter = Router();
@@ -47,6 +46,7 @@ reservasRouter.get('/:id', async (req, res) => {
 });
 
 reservasRouter.post('/', async (req, res) => {
+    console.log('Datos recibidos:', req.body);
     try {
         const { fecha_inicio, fecha_fin, cliente_dni, cabana_numero } = req.body;
 

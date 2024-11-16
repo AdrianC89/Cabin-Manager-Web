@@ -30,16 +30,16 @@ usuariosRouter.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Crear nuevo usuario
-        const newUsuario = await Usuario.create({
+        await Usuario.create({
             nombre,
             apellido,
             email,
             password: hashedPassword,
         });
 
-        res.redirect('/');
+        res.status(200).json({ success: 'Registro exitoso. Redirigiendo...' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Ocurrió un error en el servidor. Inténtalo nuevamente.' });
     }
 });
 
@@ -68,12 +68,12 @@ usuariosRouter.post('/login', async (req, res) => {
         const token = jwt.sign({ id: usuario.id, nombre: usuario.nombre, apellido: usuario.apellido, foto_perfil: usuario.foto_perfil, email: usuario.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Establecer el token en una cookie
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' }); // Ajusta opciones según sea necesario
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
-        // Redirigir a la vista de administración
-        res.redirect('/admin');
+        // Responder con éxito
+        res.status(200).json({ success: 'Inicio de sesión exitoso. Redirigiendo...' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Ocurrió un error en el servidor. Inténtalo nuevamente.' });
     }
 });
 

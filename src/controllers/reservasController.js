@@ -99,10 +99,12 @@ reservasRouter.post('/:id/edit', async (req, res) => {
         const { id } = req.params;
         const { cabana_numero, fecha_inicio: startDate, fecha_fin: endDate } = req.body;
 
-        // Verificar si ya existe una reserva para la misma cabaña y en el rango de fechas solicitado
+        // Verificar si ya existe una reserva para la misma cabaña y en el rango de fechas solicitado,
+        // excluyendo la reserva actual
         const existingReserva = await Reserva.findOne({
             where: {
                 cabana_numero,
+                numero_reserva: { [Op.ne]: id }, // Excluir la reserva que se está editando
                 [Op.or]: [
                     {
                         fecha_inicio: { [Op.between]: [startDate, endDate] }
@@ -118,8 +120,8 @@ reservasRouter.post('/:id/edit', async (req, res) => {
             }
         });
 
-        if (existingReserva && existingReserva.numero_reserva !== parseInt(id, 10)) {
-            // Enviar un error si la cabaña ya está reservada en el mismo período
+        if (existingReserva) {
+            // Enviar un error si la cabaña ya está reservada en este rango de fechas
             return res.status(400).json({ error: 'La cabaña ya está reservada en este rango de fechas.' });
         }
 
@@ -138,6 +140,7 @@ reservasRouter.post('/:id/edit', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 
 
 reservasRouter.get('/:numero_reserva/delete', async (req, res) => {

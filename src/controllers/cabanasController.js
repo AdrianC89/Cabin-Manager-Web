@@ -6,10 +6,16 @@ const cabanasRouter = Router();
 cabanasRouter.get('/', async (req, res) => {
     try {
         const cabanas = await Cabana.findAll();
-        const plainCabanas = cabanas.map(cabana => cabana.toJSON());
-        res.render('cabanas', { cabanas: plainCabanas }); // Renderizar la vista 'cabanas'
+        const cabanasTransformadas = cabanas.map(cabana => ({
+            numero: cabana.numero,
+            capacidad: cabana.capacidad,
+            descripcion: cabana.descripcion,
+            costo_diario: cabana.costo_diario ? parseFloat(cabana.costo_diario) : 0 // Convierte a número o usa 0 si es nulo
+        }));
+        res.render('cabanas', { cabanas: cabanasTransformadas });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Error al obtener las cabañas:", error);
+        res.status(500).send("Error al obtener la lista de cabañas");
     }
 });
 

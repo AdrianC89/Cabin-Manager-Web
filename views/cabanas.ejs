@@ -1,4 +1,18 @@
 <%- include("templates/header", { tituloWeb: 'Lista de Cabañas' }) %>
+
+<%
+function formatCost(cost) {
+    return `$ ${(cost || 0).toFixed(2)}`; // Aseguramos siempre dos decimales
+}
+
+const cabanasTransformadas = cabanas.map(cabana => ({
+    numero: cabana.numero,
+    capacidad: cabana.capacidad,
+    descripcion: cabana.descripcion,
+    costo_diario: formatCost(cabana.costo_diario) // Formateamos el costo
+}));
+%>
+
 <%- include("templates/table", {
     titulo: 'Lista de Cabañas',
     encabezados: ['Número', 'Capacidad', 'Descripción', 'Costo Diario'],
@@ -8,8 +22,9 @@
         'Descripción': 'descripcion',
         'Costo Diario': 'costo_diario'
     },
-    datos: cabanas,
+    datos: cabanasTransformadas,
     entidad: 'cabanas',
     idField: 'numero'
 }) %>
+
 <%- include("templates/footer") %>

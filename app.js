@@ -41,6 +41,9 @@ app.use(injectUserData);
 // Configuración para servir archivos estáticos
 app.use(express.static(path.join(path.resolve(), 'public')));
 
+// Configuración para servir archivos estáticos desde la carpeta 'public'
+app.use('/docs', express.static('public/docs'));
+
 // Configuración del motor de plantillas
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'views')); // Establece el directorio de vistas

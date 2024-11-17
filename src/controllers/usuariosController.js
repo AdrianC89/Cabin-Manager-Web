@@ -77,6 +77,11 @@ usuariosRouter.post('/login', async (req, res) => {
     }
 });
 
+//Vista de documentación
+usuariosRouter.get('/documentacion', (req, res) => {
+    res.render('documentacion');
+});
+
 //Vista de panel de administración
 usuariosRouter.get('/admin', (req, res) => {
     res.render('panel-admin');

@@ -1,36 +1,29 @@
-<%- include("templates/header", { tituloWeb: 'Sistema de Búsqueda' }) %>
+<%- include("templates/header", { tituloWeb: 'Documentación' }) %>
 
+<div class="container mt-5">
+    <div class="text-center">
+        <h2 class="display-6">Sistema de Administración de Cabañas</h2>
+    </div>
 
-
-</head>
-<body>
-    <header>
-        <h1>Sistema de Administración de Cabañas</h1>
-    </header>
-    <main>
-        <h2>Documentación del Sistema</h2>
+    <div class="mt-4">
+        <h2 class="h4">Documentación del Sistema</h2>
         <p>
             Bienvenido al sistema de administración de cabañas. Este proyecto está diseñado para simplificar la gestión de cabañas, proporcionando herramientas intuitivas para:
         </p>
-        <ul>
-            <li>Registrar y administrar información de cabañas.</li>
-            <li>Consultar detalles como número, capacidad, descripción y costo diario.</li>
-            <li>Optimizar la administración de recursos de manera eficiente.</li>
+        <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item">Registrar y administrar información de cabañas.</li>
+            <li class="list-group-item">Consultar detalles como número, capacidad, descripción y costo diario.</li>
+            <li class="list-group-item">Optimizar la administración de recursos de manera eficiente.</li>
         </ul>
         <p>
             La documentación completa contiene instrucciones detalladas sobre cómo configurar y utilizar el sistema. Te invitamos a descargarla para más información.
         </p>
-        <p>
-            <button onclick="window.location.href='/doc/Documentacion Cabañas.pdf'">
+        <div class="text-center">
+            <button class="btn btn-primary" onclick="window.location.href='/doc/Documentacion Cabañas.pdf'">
                 Descargar Documentación
             </button>
-        </p>
-    </main>
-
-
-
-
-
-
+        </div>
+    </div>
+</div>
 
 <%- include("templates/footer") %>

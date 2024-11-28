@@ -37,13 +37,17 @@ cabanasRouter.get('/:numero', async (req, res) => {
 cabanasRouter.post('/', async (req, res) => {
     try {
         console.log('Datos recibidos en el servidor:', req.body);
+
         const { numero, capacidad, descripcion, costo_diario } = req.body;
+
+        // Convertir costo_diario a un número entero
+        const costo_diario_entero = Math.round(parseFloat(costo_diario.replace(/[^0-9.-]+/g, '')) * 100);
 
         const newCabana = await Cabana.create({
             numero,
             capacidad,
             descripcion,
-            costo_diario
+            costo_diario: costo_diario_entero
         });
 
         res.status(201).json(newCabana);
@@ -52,41 +56,72 @@ cabanasRouter.post('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 // Ruta para actualizar una cabaña
+
 cabanasRouter.post('/:id/edit', async (req, res) => {
     console.log('Datos recibidos:', req.body);
     try {
-        const { id } = req.params;
-        const cabana = await Cabana.findByPk(id);
-        if (cabana) {
-            await Cabana.update(req.body, {
-                where: {
-                    numero: id
-                }
-            });
-            res.status(202).json(cabana);
-        } else {
-            res.status(404).json({ error: 'Cabaña not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+        const { id } = req.params; // Obtener el ID de la cabaña
+        const { capacidad, descripcion, costo_diario } = req.body; // Extraer los datos del cuerpo
 
-
-cabanasRouter.put('/:numero', async (req, res) => {
-    try {
-        const { numero } = req.params;
-        const cabana = await Cabana.findByPk(numero);
+        const cabana = await Cabana.findByPk(id); // Buscar la cabaña por su ID
         if (cabana) {
-            await Cabana.update(req.body, {
-                where: { numero }
-            });
-            res.status(202).json(cabana);
+            // Convertir el costo a un número entero si se proporciona
+            const costo_diario_entero = costo_diario 
+                ? Math.round(parseFloat(costo_diario.replace(/[^0-9.-]+/g, '')))
+                : cabana.costo_diario; // Si no se envía, mantener el valor actual
+
+            // Actualizar la cabaña con los datos recibidos
+            await Cabana.update(
+                {
+                    capacidad,
+                    descripcion,
+                    costo_diario: costo_diario_entero
+                },
+                { where: { numero: id } }
+            );
+
+            // Responder con éxito
+            res.status(202).json({ message: 'Cabaña actualizada exitosamente' });
         } else {
             res.status(404).json({ error: 'Cabaña no encontrada' });
         }
     } catch (error) {
+        console.error('Error al actualizar la cabaña:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+cabanasRouter.put('/:numero', async (req, res) => {
+    try {
+        console.log('Datos recibidos:', req.body);
+
+        const { numero } = req.params;
+        const { capacidad, descripcion, costo_diario } = req.body;
+
+        const cabana = await Cabana.findByPk(numero);
+        if (cabana) {
+            // Convertir costo_diario a un número entero
+            const costo_diario_entero = Math.round(parseFloat(costo_diario.replace(/[^0-9.-]+/g, '')) * 100);
+
+            await Cabana.update(
+                {
+                    capacidad,
+                    descripcion,
+                    costo_diario: costo_diario_entero
+                },
+                {
+                    where: { numero }
+                }
+            );
+
+            res.status(202).json({ message: 'Cabaña actualizada' });
+        } else {
+            res.status(404).json({ error: 'Cabaña no encontrada' });
+        }
+    } catch (error) {
+        console.error('Error al actualizar la cabaña:', error);
         res.status(500).json({ error: error.message });
     }
 });
